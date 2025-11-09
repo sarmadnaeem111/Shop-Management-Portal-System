@@ -5,6 +5,7 @@ import { useAdmin } from '../contexts/AdminContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import LanguageToggle from './LanguageToggle';
 import Translate from './Translate';
+import '../styles/sidebar.css';
 
 const AdminNavbar = () => {
   const { adminUser, adminLogout } = useAdmin();
@@ -57,37 +58,36 @@ const AdminNavbar = () => {
       </Navbar>
       
       {/* Sidebar for mobile view */}
-      <Offcanvas show={showSidebar} onHide={handleClose} className="bg-dark text-white" placement="start">
-        <Offcanvas.Header closeButton closeVariant="white">
+      <Offcanvas show={showSidebar} onHide={handleClose} className="app-mobile-sidebar" placement="start">
+        <Offcanvas.Header closeButton>
           <Offcanvas.Title><Translate textKey="adminPanel" fallback="Admin Panel" /></Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          <Nav className="flex-column">
+          <Nav className="flex-column sidebar-nav">
             <Nav.Link 
               as={Link} 
               to="/admin/dashboard" 
-              className={isActive('/admin/dashboard') ? 'active' : ''}
+              className={`sidebar-link ${isActive('/admin/dashboard') ? 'active' : ''}`}
               onClick={handleClose}
             >
-              <Translate textKey="dashboard" />
+              <i className="bi bi-speedometer2 me-2"></i><Translate textKey="dashboard" />
             </Nav.Link>
             <Nav.Link 
               as={Link} 
               to="/admin/pending-users" 
-              className={isActive('/admin/pending-users') ? 'active' : ''}
+              className={`sidebar-link ${isActive('/admin/pending-users') ? 'active' : ''}`}
               onClick={handleClose}
             >
-              <Translate textKey="pendingApprovals" fallback="Pending Approvals" />
+              <i className="bi bi-person-plus me-2"></i><Translate textKey="pendingApprovals" fallback="Pending Approvals" />
             </Nav.Link>
             <Nav.Link 
               as={Link} 
               to="/admin/users" 
-              className={isActive('/admin/users') ? 'active' : ''}
+              className={`sidebar-link ${isActive('/admin/users') ? 'active' : ''}`}
               onClick={handleClose}
             >
-              <Translate textKey="manageUsers" fallback="Manage Users" />
+              <i className="bi bi-people me-2"></i><Translate textKey="manageUsers" fallback="Manage Users" />
             </Nav.Link>
-            <hr className="bg-secondary" />
             <div className="d-flex mt-3">
               <LanguageToggle />
               <Button 
@@ -106,30 +106,41 @@ const AdminNavbar = () => {
       </Offcanvas>
       
       {/* Sidebar for desktop */}
-      <div className="d-none d-lg-block" style={{ width: '250px', position: 'fixed', top: '70px', bottom: 0, left: 0, zIndex: 100, padding: '20px 0', boxShadow: '0 4px 12px 0 rgba(0,0,0,.05)', backgroundColor: '#f8f9fa' }}>
-        <Nav className="flex-column px-3">
+      <div className="app-sidebar d-none d-lg-block" style={{ top: '70px' }}>
+        <div className="px-3 mb-3 fw-bold sidebar-brand">
+          <Link to="/admin/dashboard" className="text-decoration-none">
+            Golden Oil Admin
+          </Link>
+        </div>
+        <Nav className="flex-column px-3 sidebar-nav">
           <Nav.Link 
             as={Link} 
             to="/admin/dashboard" 
-            className={`rounded py-2 ${isActive('/admin/dashboard') ? 'active bg-primary text-white' : ''}`}
+            className={`rounded py-2 sidebar-link ${isActive('/admin/dashboard') ? 'active' : ''}`}
           >
             <i className="bi bi-speedometer2 me-2"></i> <Translate textKey="dashboard" />
           </Nav.Link>
           <Nav.Link 
             as={Link} 
             to="/admin/pending-users" 
-            className={`rounded py-2 ${isActive('/admin/pending-users') ? 'active bg-primary text-white' : ''}`}
+            className={`rounded py-2 sidebar-link ${isActive('/admin/pending-users') ? 'active' : ''}`}
           >
             <i className="bi bi-person-plus me-2"></i> <Translate textKey="pendingApprovals" fallback="Pending Approvals" />
           </Nav.Link>
           <Nav.Link 
             as={Link} 
             to="/admin/users" 
-            className={`rounded py-2 ${isActive('/admin/users') ? 'active bg-primary text-white' : ''}`}
+            className={`rounded py-2 sidebar-link ${isActive('/admin/users') ? 'active' : ''}`}
           >
             <i className="bi bi-people me-2"></i> <Translate textKey="manageUsers" fallback="Manage Users" />
           </Nav.Link>
         </Nav>
+        <div className="px-3 mt-3 sidebar-footer">
+          <LanguageToggle />
+          <Button variant="outline-danger" className="ms-2" onClick={handleLogout}>
+            <Translate textKey="logout" />
+          </Button>
+        </div>
       </div>
     </>
   );
