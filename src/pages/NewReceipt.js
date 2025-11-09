@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BarcodeReader from 'react-barcode-reader';
 import Select from 'react-select';
@@ -104,7 +104,7 @@ const NewReceipt = () => {
     return () => {
       document.removeEventListener('keydown', handleKeyPress);
     };
-  }, [loading, items]);
+  }, [loading, items, handleSubmit]);
 
   // Handle barcode scan from scanner hardware
   const handleScan = (data) => {
@@ -312,7 +312,7 @@ const NewReceipt = () => {
   };
 
   // Handle form submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -332,6 +332,8 @@ const NewReceipt = () => {
         quantityUnit: item.quantityUnit || 'units',
         category: item.category || 'Uncategorized'
       }));
+      
+      const totals = calculateTotals();
       
     const receiptData = {
       shopId: currentUser.uid,
@@ -384,9 +386,9 @@ const NewReceipt = () => {
     } catch (error) {
       setError('Error saving receipt: ' + error.message);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-  };
+  }, [items, currentUser, shopData, transactionId, discount, enterAmount, selectedEmployee, autoPrint]);
 
   // Reset form
   const resetForm = () => {
