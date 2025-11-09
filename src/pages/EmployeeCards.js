@@ -263,9 +263,9 @@ const EmployeeCards = () => {
         .employee-cards-row {
           display: flex !important;
           flex-wrap: wrap !important;
-          gap: 30px !important;
+          gap: 60px !important;
           margin: 0 !important;
-          padding: 0 !important;
+          padding: 20px 0 !important;
         }
         
         .employee-cards-row > * {
@@ -287,7 +287,7 @@ const EmployeeCards = () => {
           flex-direction: column;
           align-items: center;
           width: 100%;
-          margin: 0;
+          margin: 20px !important;
           padding: 0;
         }
 
