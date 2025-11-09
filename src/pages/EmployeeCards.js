@@ -828,6 +828,8 @@ const EmployeeCards = () => {
           display: flex;
           justify-content: space-between;
           align-items: center;
+          flex-wrap: wrap;
+          gap: 4px;
         }
 
         .card-validity-badge {
@@ -1132,73 +1134,87 @@ const EmployeeCards = () => {
 
           .card-main-row {
             gap: 8px;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
+            align-items: flex-start;
           }
 
           .employee-photo-section {
-            width: 100%;
+            flex-shrink: 0;
             display: flex;
-            justify-content: center;
-            margin-bottom: 8px;
+            justify-content: flex-start;
+            margin-bottom: 0;
           }
 
           .employee-photo-frame {
-            width: 60px;
-            height: 60px;
+            width: 55px;
+            height: 55px;
           }
 
           .employee-photo-img,
           .photo-placeholder {
-            width: 60px;
-            height: 60px;
+            width: 55px;
+            height: 55px;
           }
 
           .employee-info-section {
             flex: 1;
             min-width: 0;
-            text-align: center;
+            text-align: left;
+            padding-left: 0;
           }
 
           .employee-name {
             font-size: 14px;
-            margin-bottom: 3px;
+            margin-bottom: 4px;
+            font-weight: 700;
+            line-height: 1.2;
           }
 
           .employee-position {
             font-size: 10px;
-            margin-bottom: 2px;
-            justify-content: center;
+            margin-bottom: 3px;
+            justify-content: flex-start;
+            color: #666;
           }
 
           .employee-department {
             font-size: 9px;
             margin-bottom: 2px;
-            justify-content: center;
+            justify-content: flex-start;
+            color: #666;
           }
 
           .employee-contact {
             font-size: 9px;
-            justify-content: center;
+            justify-content: flex-start;
+            color: #888;
+            margin-top: 2px;
           }
 
           .qr-code-section {
-            width: 100%;
-            margin-top: 8px;
+            flex-shrink: 0;
+            width: auto;
+            margin-top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
           }
 
           .qr-code-wrapper {
-            width: 65px;
-            height: 65px;
-            margin: 0 auto;
+            width: 60px;
+            height: 60px;
+            margin: 0;
           }
 
           .qr-code-background {
-            width: 55px;
-            height: 55px;
+            width: 50px;
+            height: 50px;
           }
 
           .qr-label {
             font-size: 8px;
+            margin-top: 4px;
+            text-align: center;
           }
 
           .card-footer {
@@ -1240,29 +1256,47 @@ const EmployeeCards = () => {
             padding: 10px;
           }
 
+          .card-main-row {
+            gap: 6px;
+          }
+
           .employee-photo-frame {
-            width: 55px;
-            height: 55px;
+            width: 50px;
+            height: 50px;
           }
 
           .employee-photo-img,
           .photo-placeholder {
-            width: 55px;
-            height: 55px;
+            width: 50px;
+            height: 50px;
           }
 
           .employee-name {
             font-size: 13px;
+            margin-bottom: 3px;
+          }
+
+          .employee-position {
+            font-size: 9px;
+            margin-bottom: 2px;
+          }
+
+          .employee-contact {
+            font-size: 8px;
           }
 
           .qr-code-wrapper {
-            width: 60px;
-            height: 60px;
+            width: 55px;
+            height: 55px;
           }
 
           .qr-code-background {
-            width: 50px;
-            height: 50px;
+            width: 47px;
+            height: 47px;
+          }
+
+          .qr-label {
+            font-size: 7px;
           }
         }
       `}</style>
