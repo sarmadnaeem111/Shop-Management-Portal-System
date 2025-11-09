@@ -177,11 +177,11 @@ const EmployeeCards = () => {
   return (
     <>
       <MainNavbar />
-      <Container className="mt-4">
-        <div className="d-flex justify-content-between align-items-center mb-3">
+      <Container className="mt-4 employee-cards-container">
+        <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 page-header-section">
           <PageHeader title="Employee QR Cards" icon="bi-qr-code" color="primary" />
-          <div>
-            <Button variant="secondary" className="me-2 back-btn" onClick={() => navigate('/employees')}>Back</Button>
+          <div className="d-flex gap-2 mt-2 mt-md-0 header-buttons">
+            <Button variant="secondary" className="back-btn" onClick={() => navigate('/employees')}>Back</Button>
             <Button variant="primary" className="print-btn" onClick={handlePrint}>Print</Button>
           </div>
         </div>
@@ -204,7 +204,7 @@ const EmployeeCards = () => {
         ) : (
           <Row className="employee-cards-row">
             {filteredEmployees.map(emp => (
-              <Col key={emp.id} xs={12} sm={6} md={4} lg={3} xl={3}>
+              <Col key={emp.id} xs={12} sm={12} md={6} lg={4} xl={3}>
                 <div className="employee-card-wrapper">
                   <div id={`employee-card-${emp.id}`} className="employee-id-card card-print">
                     {/* Lanyard Hole */}
@@ -288,7 +288,7 @@ const EmployeeCards = () => {
                         {/* QR Code Section */}
                         <div className="qr-code-section">
                           <div className="qr-code-container">
-                            {emp.qrCodeId ? (
+                      {emp.qrCodeId ? (
                               <div className="qr-code-wrapper">
                                 <div className="qr-code-background">
                                   <QRCode 
@@ -337,7 +337,7 @@ const EmployeeCards = () => {
 
                   {/* Action Buttons */}
                   <div className="mt-3 w-100 d-print-none text-center">
-                    {emp.qrCodeId && (
+                      {emp.qrCodeId && (
                       <div className="d-flex gap-2">
                         <Button 
                           variant="primary" 
@@ -358,8 +358,8 @@ const EmployeeCards = () => {
                           Print
                         </Button>
                       </div>
-                    )}
-                  </div>
+                      )}
+                    </div>
                 </div>
               </Col>
             ))}
@@ -373,12 +373,26 @@ const EmployeeCards = () => {
       </Container>
 
       <style>{`
+        .employee-cards-container {
+          padding-left: 15px;
+          padding-right: 15px;
+        }
+
+        .page-header-section {
+          gap: 15px;
+        }
+
+        .header-buttons {
+          flex-wrap: wrap;
+        }
+
         .employee-cards-row {
           display: flex !important;
           flex-wrap: wrap !important;
-          gap: 60px !important;
+          gap: 30px !important;
           margin: 0 !important;
           padding: 20px 0 !important;
+          justify-content: center;
         }
         
         .employee-cards-row > * {
@@ -400,12 +414,13 @@ const EmployeeCards = () => {
           flex-direction: column;
           align-items: center;
           width: 100%;
-          margin: 20px !important;
+          margin: 0 !important;
           padding: 0;
         }
 
         .employee-id-card {
-          width: 360px;
+          width: 100%;
+          max-width: 360px;
           height: 240px;
           background: linear-gradient(145deg, #ffffff 0%, #fafbfc 50%, #f5f7fa 100%);
           border-radius: 16px;
@@ -926,11 +941,328 @@ const EmployeeCards = () => {
           }
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        /* Responsive Styles */
+        
+        /* Large Desktop (xl and above) */
+        @media (min-width: 1200px) {
+          .employee-cards-row {
+            gap: 40px !important;
+            justify-content: flex-start;
+          }
+          
           .employee-id-card {
-            width: 100%;
+            max-width: 360px;
+          }
+        }
+
+        /* Desktop (lg) */
+        @media (min-width: 992px) and (max-width: 1199.98px) {
+          .employee-cards-row {
+            gap: 35px !important;
+            justify-content: flex-start;
+          }
+          
+          .employee-id-card {
             max-width: 340px;
+          }
+        }
+
+        /* Tablet (md) */
+        @media (min-width: 768px) and (max-width: 991.98px) {
+          .employee-cards-row {
+            gap: 30px !important;
+            justify-content: center;
+          }
+          
+          .employee-id-card {
+            max-width: 320px;
+            height: 220px;
+          }
+
+          .card-header-gradient {
+            padding: 12px 16px;
+          }
+
+          .card-body-content {
+            padding: 14px 16px;
+          }
+
+          .employee-photo-frame {
+            width: 70px;
+            height: 70px;
+          }
+
+          .employee-photo-img,
+          .photo-placeholder {
+            width: 70px;
+            height: 70px;
+          }
+
+          .employee-name {
+            font-size: 16px;
+          }
+
+          .qr-code-section {
+            width: 75px;
+          }
+
+          .qr-code-wrapper {
+            width: 75px;
+            height: 75px;
+          }
+
+          .qr-code-background {
+            width: 65px;
+            height: 65px;
+          }
+        }
+
+        /* Mobile Landscape and Small Tablets (sm) */
+        @media (min-width: 576px) and (max-width: 767.98px) {
+          .employee-cards-row {
+            gap: 25px !important;
+            justify-content: center;
+          }
+          
+          .employee-id-card {
+            max-width: 100%;
+            width: 100%;
+            height: 220px;
+          }
+
+          .card-header-gradient {
+            padding: 12px 14px;
+          }
+
+          .card-body-content {
+            padding: 12px 14px;
+          }
+
+          .card-main-row {
+            gap: 10px;
+          }
+
+          .employee-photo-frame {
+            width: 65px;
+            height: 65px;
+          }
+
+          .employee-photo-img,
+          .photo-placeholder {
+            width: 65px;
+            height: 65px;
+          }
+
+          .employee-name {
+            font-size: 15px;
+          }
+
+          .employee-position {
+            font-size: 11px;
+          }
+
+          .qr-code-section {
+            width: 70px;
+          }
+
+          .qr-code-wrapper {
+            width: 70px;
+            height: 70px;
+          }
+
+          .qr-code-background {
+            width: 60px;
+            height: 60px;
+          }
+        }
+
+        /* Mobile Portrait (xs) */
+        @media (max-width: 575.98px) {
+          .employee-cards-container {
+            padding-left: 10px;
+            padding-right: 10px;
+          }
+
+          .page-header-section {
+            margin-bottom: 15px !important;
+          }
+
+          .header-buttons {
+            width: 100%;
+          }
+
+          .header-buttons .btn {
+            flex: 1;
+            min-width: 0;
+          }
+
+          .search-bar {
+            margin-bottom: 15px !important;
+          }
+
+          .employee-cards-row {
+            gap: 20px !important;
+            padding: 15px 0 !important;
+            justify-content: center;
+          }
+          
+          .employee-id-card {
+            max-width: 100%;
+            width: 100%;
+            height: auto;
+            min-height: 200px;
+          }
+
+          .card-header-gradient {
+            padding: 10px 12px;
+          }
+
+          .card-company-name {
+            font-size: 11px;
+          }
+
+          .card-employee-id {
+            font-size: 9px;
+            padding: 4px 8px;
+          }
+
+          .card-body-content {
+            padding: 12px;
+          }
+
+          .card-main-row {
+            gap: 8px;
+            flex-wrap: wrap;
+          }
+
+          .employee-photo-section {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 8px;
+          }
+
+          .employee-photo-frame {
+            width: 60px;
+            height: 60px;
+          }
+
+          .employee-photo-img,
+          .photo-placeholder {
+            width: 60px;
+            height: 60px;
+          }
+
+          .employee-info-section {
+            flex: 1;
+            min-width: 0;
+            text-align: center;
+          }
+
+          .employee-name {
+            font-size: 14px;
+            margin-bottom: 3px;
+          }
+
+          .employee-position {
+            font-size: 10px;
+            margin-bottom: 2px;
+            justify-content: center;
+          }
+
+          .employee-department {
+            font-size: 9px;
+            margin-bottom: 2px;
+            justify-content: center;
+          }
+
+          .employee-contact {
+            font-size: 9px;
+            justify-content: center;
+          }
+
+          .qr-code-section {
+            width: 100%;
+            margin-top: 8px;
+          }
+
+          .qr-code-wrapper {
+            width: 65px;
+            height: 65px;
+            margin: 0 auto;
+          }
+
+          .qr-code-background {
+            width: 55px;
+            height: 55px;
+          }
+
+          .qr-label {
+            font-size: 8px;
+          }
+
+          .card-footer {
+            padding: 8px 12px;
+          }
+
+          .card-validity-badge {
+            font-size: 9px;
+            padding: 3px 6px;
+          }
+
+          .card-date {
+            font-size: 8px;
+          }
+
+          .download-card-btn,
+          .print-card-btn {
+            font-size: 12px;
+            padding: 6px 12px;
+          }
+
+          .download-card-btn i,
+          .print-card-btn i {
+            font-size: 14px;
+          }
+        }
+
+        /* Extra Small Mobile */
+        @media (max-width: 375px) {
+          .employee-id-card {
+            min-height: 180px;
+          }
+
+          .card-header-gradient {
+            padding: 8px 10px;
+          }
+
+          .card-body-content {
+            padding: 10px;
+          }
+
+          .employee-photo-frame {
+            width: 55px;
+            height: 55px;
+          }
+
+          .employee-photo-img,
+          .photo-placeholder {
+            width: 55px;
+            height: 55px;
+          }
+
+          .employee-name {
+            font-size: 13px;
+          }
+
+          .qr-code-wrapper {
+            width: 60px;
+            height: 60px;
+          }
+
+          .qr-code-background {
+            width: 50px;
+            height: 50px;
           }
         }
       `}</style>
