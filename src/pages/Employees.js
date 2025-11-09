@@ -95,6 +95,110 @@ const Employees = () => {
     }
   };
 
+  const handlePrintCard = (employee) => {
+    const cardElement = document.getElementById(`employee-card-modal-${employee.id}`);
+    if (!cardElement) return;
+
+    // Get the card HTML
+    const cardHTML = cardElement.outerHTML;
+
+    // Get all styles from the current document
+    const styles = Array.from(document.querySelectorAll('style'))
+      .map(style => style.innerHTML)
+      .join('\n');
+
+    // Create a hidden iframe for printing
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    iframe.style.opacity = '0';
+    document.body.appendChild(iframe);
+
+    // Write content to iframe
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+    iframeDoc.open();
+    iframeDoc.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Print Card - ${employee.name}</title>
+          <meta charset="utf-8">
+          <style>
+            @page {
+              size: A4;
+              margin: 0.5cm;
+            }
+            * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+            }
+            body {
+              margin: 0;
+              padding: 20px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              min-height: 100vh;
+              background: white;
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            }
+            ${styles}
+            .employee-id-card-modal {
+              margin: 0 auto !important;
+              box-shadow: none !important;
+            }
+            @media print {
+              body {
+                padding: 0;
+                margin: 0;
+              }
+              .employee-id-card-modal {
+                page-break-inside: avoid;
+                break-inside: avoid;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          ${cardHTML}
+        </body>
+      </html>
+    `);
+    iframeDoc.close();
+
+    // Wait for content to load, then print
+    iframe.onload = () => {
+      setTimeout(() => {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        // Remove iframe after printing
+        setTimeout(() => {
+          if (iframe.parentNode) {
+            document.body.removeChild(iframe);
+          }
+        }, 1000);
+      }, 250);
+    };
+
+    // Fallback if onload doesn't fire
+    setTimeout(() => {
+      if (iframe.parentNode) {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        setTimeout(() => {
+          if (iframe.parentNode) {
+            document.body.removeChild(iframe);
+          }
+        }, 1000);
+      }
+    }, 500);
+  };
+
   return (
     <>
       <MainNavbar />
@@ -335,10 +439,19 @@ const Employees = () => {
               Close
             </Button>
             {selectedEmployee && selectedEmployee.qrCodeId && (
-              <Button variant="primary" onClick={() => downloadCardPng(selectedEmployee)}>
-                <i className="bi bi-download me-2"></i>
-                Download Card
-              </Button>
+              <>
+                <Button 
+                  variant="outline-primary" 
+                  onClick={() => handlePrintCard(selectedEmployee)}
+                >
+                  <i className="bi bi-printer me-2"></i>
+                  Print
+                </Button>
+                <Button variant="primary" onClick={() => downloadCardPng(selectedEmployee)}>
+                  <i className="bi bi-download me-2"></i>
+                  Download Card
+                </Button>
+              </>
             )}
           </Modal.Footer>
         </Modal>
