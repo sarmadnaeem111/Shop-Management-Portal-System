@@ -72,6 +72,84 @@ const EmployeeCards = () => {
     window.print();
   };
 
+  const handlePrintCard = (employee) => {
+    const cardElement = document.getElementById(`employee-card-${employee.id}`);
+    if (!cardElement) return;
+
+    // Create a new window for printing
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      alert('Please allow popups to print the card.');
+      return;
+    }
+
+    // Get the card HTML
+    const cardHTML = cardElement.outerHTML;
+
+    // Get all styles from the current document
+    const styles = Array.from(document.querySelectorAll('style'))
+      .map(style => style.innerHTML)
+      .join('\n');
+
+    // Create the print document
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Print Card - ${employee.name}</title>
+          <meta charset="utf-8">
+          <style>
+            @page {
+              size: A4;
+              margin: 0.5cm;
+            }
+            * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+            }
+            body {
+              margin: 0;
+              padding: 20px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              min-height: 100vh;
+              background: white;
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            }
+            ${styles}
+            .employee-id-card {
+              margin: 0 auto !important;
+              box-shadow: none !important;
+            }
+            @media print {
+              body {
+                padding: 0;
+                margin: 0;
+              }
+              .employee-id-card {
+                page-break-inside: avoid;
+                break-inside: avoid;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          ${cardHTML}
+        </body>
+      </html>
+    `);
+
+    printWindow.document.close();
+
+    // Wait for content to load, then print
+    setTimeout(() => {
+      printWindow.focus();
+      printWindow.print();
+    }, 250);
+  };
+
   return (
     <>
       <MainNavbar />
@@ -233,18 +311,29 @@ const EmployeeCards = () => {
                     </div>
                   </div>
 
-                  {/* Download Button */}
+                  {/* Action Buttons */}
                   <div className="mt-3 w-100 d-print-none text-center">
                     {emp.qrCodeId && (
-                      <Button 
-                        variant="primary" 
-                        size="sm" 
-                        className="w-100 download-card-btn" 
-                        onClick={() => downloadCardPng(emp)}
-                      >
-                        <i className="bi bi-download me-2"></i>
-                        Download Card
-                      </Button>
+                      <div className="d-flex gap-2">
+                        <Button 
+                          variant="primary" 
+                          size="sm" 
+                          className="flex-fill download-card-btn" 
+                          onClick={() => downloadCardPng(emp)}
+                        >
+                          <i className="bi bi-download me-2"></i>
+                          Download
+                        </Button>
+                        <Button 
+                          variant="outline-primary" 
+                          size="sm" 
+                          className="flex-fill print-card-btn" 
+                          onClick={() => handlePrintCard(emp)}
+                        >
+                          <i className="bi bi-printer me-2"></i>
+                          Print
+                        </Button>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -759,6 +848,26 @@ const EmployeeCards = () => {
         }
 
         .download-card-btn:active {
+          transform: translateY(0);
+        }
+
+        /* Print Card Button */
+        .print-card-btn {
+          border: 2px solid #667eea;
+          color: #667eea;
+          font-weight: 600;
+          transition: all 0.3s ease;
+        }
+
+        .print-card-btn:hover {
+          background: #667eea;
+          color: white;
+          border-color: #667eea;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .print-card-btn:active {
           transform: translateY(0);
         }
 
