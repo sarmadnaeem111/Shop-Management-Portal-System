@@ -298,120 +298,6 @@ const NewReceipt = () => {
     setSuccess('');
   }, []);
 
-  // Handle form submission
-  const handleSubmit = useCallback(async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-    
-    if (items.length === 0) {
-      setError('Please add at least one item');
-      setLoading(false);
-      return;
-    }
-    
-    try {
-      const receiptItems = items.map(item => ({
-        name: item.name,
-        price: parseFloat(item.salePrice),
-        quantity: parseFloat(item.quantity),
-        costPrice: parseFloat(item.costPrice || 0),
-        quantityUnit: item.quantityUnit || 'units',
-        category: item.category || 'Uncategorized'
-      }));
-      
-      const totals = calculateTotals();
-      
-    const receiptData = {
-      shopId: currentUser.uid,
-      shopDetails: {
-        name: shopData.shopName,
-        address: shopData.address,
-        phone: shopData.phoneNumbers && shopData.phoneNumbers.length > 0 
-               ? shopData.phoneNumbers.join(', ') 
-               : shopData.phoneNumber || '',
-        logoUrl: shopData.logoUrl || '',
-        receiptDescription: shopData.receiptDescription || ''
-      },
-      transactionId,
-        cashierName: 'Cashier',
-        managerName: 'Manager',
-        items: receiptItems,
-        totalAmount: calculateTotal(receiptItems, discount),
-        discount: parseFloat(discount) || 0,
-        paymentMethod: 'Cash',
-        cashGiven: parseFloat(enterAmount) || 0,
-        change: parseFloat(enterAmount) - parseFloat(totals.payable),
-        employeeName: selectedEmployee ? selectedEmployee.name : null,
-        employeeId: selectedEmployee ? selectedEmployee.id : null
-      };
-      
-      const receiptId = await saveReceipt(receiptData);
-      
-      // Update stock
-      await updateStockQuantity(currentUser.uid, receiptItems.map(item => ({
-          name: item.name,
-        quantity: item.quantity,
-        quantityUnit: item.quantityUnit
-        })));
-      
-      setSuccess('Receipt saved successfully');
-      setSavedReceiptId(receiptId);
-      
-      // Auto print if enabled
-      if (autoPrint) {
-        setTimeout(() => {
-          printReceipt();
-        }, 500);
-      }
-        
-      // Reset form after delay
-        setTimeout(() => {
-          resetForm();
-      }, 5000);
-      
-    } catch (error) {
-      setError('Error saving receipt: ' + error.message);
-    } finally {
-      setLoading(false);
-    }
-  }, [items, currentUser, shopData, transactionId, discount, enterAmount, selectedEmployee, autoPrint, calculateTotals, printReceipt, resetForm]);
-
-  // Handle Enter key to save and print receipt
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      // Check if Enter key is pressed
-      if (e.key === 'Enter' && !loading && items.length > 0) {
-        // Check if the user is not typing in an input field
-        const activeElement = document.activeElement;
-        const isInputField = activeElement && (
-          activeElement.tagName === 'INPUT' || 
-          activeElement.tagName === 'SELECT' ||
-          activeElement.tagName === 'TEXTAREA'
-        );
-        
-        // If not in an input field, save and print the receipt
-        if (!isInputField) {
-          e.preventDefault();
-          handleSubmit(e);
-        }
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyPress);
-    return () => {
-      document.removeEventListener('keydown', handleKeyPress);
-    };
-  }, [loading, items, handleSubmit]);
-
-  // Get product options for select
-  const productOptions = stockLoaded ? 
-    stockItems.map(item => ({ value: item.name, label: item.name })) : [];
-
-  // Get employee options for select
-  const employeeOptions = employeesLoaded ? 
-    employees.map(emp => ({ value: emp.id, label: emp.name })) : [];
-
   // Print the receipt
   const printReceipt = useCallback(() => {
     const printWindow = window.open('', '_blank');
@@ -635,6 +521,120 @@ const NewReceipt = () => {
       printWindow.print();
     }, 250);
   }, [shopData, transactionId, items, discount, tax, enterAmount, calculateTotals]);
+
+  // Handle form submission
+  const handleSubmit = useCallback(async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    
+    if (items.length === 0) {
+      setError('Please add at least one item');
+      setLoading(false);
+      return;
+    }
+    
+    try {
+      const receiptItems = items.map(item => ({
+        name: item.name,
+        price: parseFloat(item.salePrice),
+        quantity: parseFloat(item.quantity),
+        costPrice: parseFloat(item.costPrice || 0),
+        quantityUnit: item.quantityUnit || 'units',
+        category: item.category || 'Uncategorized'
+      }));
+      
+      const totals = calculateTotals();
+      
+    const receiptData = {
+      shopId: currentUser.uid,
+      shopDetails: {
+        name: shopData.shopName,
+        address: shopData.address,
+        phone: shopData.phoneNumbers && shopData.phoneNumbers.length > 0 
+               ? shopData.phoneNumbers.join(', ') 
+               : shopData.phoneNumber || '',
+        logoUrl: shopData.logoUrl || '',
+        receiptDescription: shopData.receiptDescription || ''
+      },
+      transactionId,
+        cashierName: 'Cashier',
+        managerName: 'Manager',
+        items: receiptItems,
+        totalAmount: calculateTotal(receiptItems, discount),
+        discount: parseFloat(discount) || 0,
+        paymentMethod: 'Cash',
+        cashGiven: parseFloat(enterAmount) || 0,
+        change: parseFloat(enterAmount) - parseFloat(totals.payable),
+        employeeName: selectedEmployee ? selectedEmployee.name : null,
+        employeeId: selectedEmployee ? selectedEmployee.id : null
+      };
+      
+      const receiptId = await saveReceipt(receiptData);
+      
+      // Update stock
+      await updateStockQuantity(currentUser.uid, receiptItems.map(item => ({
+          name: item.name,
+        quantity: item.quantity,
+        quantityUnit: item.quantityUnit
+        })));
+      
+      setSuccess('Receipt saved successfully');
+      setSavedReceiptId(receiptId);
+      
+      // Auto print if enabled
+      if (autoPrint) {
+        setTimeout(() => {
+          printReceipt();
+        }, 500);
+      }
+        
+      // Reset form after delay
+        setTimeout(() => {
+          resetForm();
+      }, 5000);
+      
+    } catch (error) {
+      setError('Error saving receipt: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [items, currentUser, shopData, transactionId, discount, enterAmount, selectedEmployee, autoPrint, calculateTotals, printReceipt, resetForm]);
+
+  // Handle Enter key to save and print receipt
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      // Check if Enter key is pressed
+      if (e.key === 'Enter' && !loading && items.length > 0) {
+        // Check if the user is not typing in an input field
+        const activeElement = document.activeElement;
+        const isInputField = activeElement && (
+          activeElement.tagName === 'INPUT' || 
+          activeElement.tagName === 'SELECT' ||
+          activeElement.tagName === 'TEXTAREA'
+        );
+        
+        // If not in an input field, save and print the receipt
+        if (!isInputField) {
+          e.preventDefault();
+          handleSubmit(e);
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [loading, items, handleSubmit]);
+
+  // Get product options for select
+  const productOptions = stockLoaded ? 
+    stockItems.map(item => ({ value: item.name, label: item.name })) : [];
+
+  // Get employee options for select
+  const employeeOptions = employeesLoaded ? 
+    employees.map(emp => ({ value: emp.id, label: emp.name })) : [];
 
   return (
     <>
