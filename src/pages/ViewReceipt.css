@@ -1,0 +1,234 @@
+/* ViewReceipt responsive styles */
+.receipt-header {
+  margin-bottom: 1.5rem;
+}
+
+.receipt-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.receipt-container {
+  overflow-x: auto;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .receipt-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .receipt-buttons {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .receipt-buttons .btn {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .receipt-table {
+    min-width: 100%;
+    font-size: 0.85rem;
+  }
+  
+  .receipt-table th,
+  .receipt-table td {
+    padding: 0.5rem 0.25rem;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 576px) {
+  .receipt-buttons {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+  
+  .receipt-buttons .btn {
+    margin-bottom: 0.5rem;
+    min-width: 48%;
+    text-align: center;
+  }
+  
+  .size-controls-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .size-controls-form .form-label {
+    margin-bottom: 0.5rem;
+  }
+  
+  .receipt-container .table-responsive {
+    margin: 0 -1rem;
+    padding: 0 1rem;
+    width: calc(100% + 2rem);
+  }
+}
+
+/* Added to ensure PDF and printing still work correctly */
+@media print {
+  .receipt-header, 
+  .receipt-buttons,
+  .size-controls-form {
+    display: none !important;
+  }
+  
+  .receipt-container {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  
+  .receipt-table {
+    width: 100% !important;
+  }
+  
+  /* Thermal printer specific styles */
+  @page thermal {
+    size: 80mm auto;
+    margin: 0;
+  }
+  
+  body.thermal-print {
+    width: 80mm !important;
+    max-width: 80mm !important;
+    margin: 0 !important;
+    padding: 5mm !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 11px !important;
+    line-height: 1.2 !important;
+  }
+  
+  .thermal-print .receipt-container {
+    width: 80mm !important;
+    max-width: 80mm !important;
+    font-size: 11px !important;
+  }
+  
+  .thermal-print .table {
+    font-size: 10px !important;
+    background: white !important;
+    color: black !important;
+    border-collapse: collapse !important;
+    border: 1px solid black !important;
+    width: 100% !important;
+  }
+  
+  .thermal-print .table th,
+  .thermal-print .table td {
+    padding: 2px 4px !important;
+    background: white !important;
+    color: black !important;
+    border: 1px solid black !important;
+    border-color: black !important;
+  }
+  
+  .thermal-print .table th {
+    background: #f8f9fa !important;
+    color: black !important;
+    border-bottom: 2px solid black !important;
+    font-weight: bold !important;
+  }
+  
+  .thermal-print .table tr {
+    border-bottom: 1px solid black !important;
+  }
+  
+  .thermal-print .table tr:last-child {
+    border-bottom: none !important;
+  }
+  
+  .thermal-print h3 {
+    font-size: 14px !important;
+    margin: 5px 0 !important;
+  }
+  
+  .thermal-print p {
+    font-size: 10px !important;
+    margin: 2px 0 !important;
+  }
+  
+  /* A4 specific styles */
+  @page a4 {
+    size: A4;
+    margin: 10mm;
+  }
+  
+  body.a4-print {
+    width: 190mm !important;
+    margin: 0 auto !important;
+    padding: 10mm !important;
+    font-size: 14px !important;
+  }
+  
+  .a4-print .receipt-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 14px !important;
+  }
+  
+  .a4-print .table {
+    font-size: 14px !important;
+    background: white !important;
+    color: black !important;
+    border-collapse: collapse !important;
+    border: 2px solid black !important;
+    width: 100% !important;
+    font-weight: bold !important;
+  }
+  
+  .a4-print .table th,
+  .a4-print .table td {
+    padding: 8px !important;
+    background: white !important;
+    color: black !important;
+    border: 1px solid black !important;
+    border-color: black !important;
+    font-weight: bold !important;
+  }
+  
+  .a4-print .table th {
+    background: #f8f9fa !important;
+    color: black !important;
+    border-bottom: 3px solid black !important;
+    font-weight: bold !important;
+  }
+  
+  .a4-print .table tr {
+    border-bottom: 1px solid black !important;
+  }
+  
+  .a4-print .table tr:last-child {
+    border-bottom: none !important;
+  }
+  
+  .a4-print h3,
+  .a4-print p,
+  .a4-print div,
+  .a4-print span,
+  .a4-print strong,
+  .a4-print b,
+  .a4-print em,
+  .a4-print i,
+  .a4-print small,
+  .a4-print li,
+  .a4-print dt,
+  .a4-print dd {
+    font-weight: bold !important;
+  }
+}

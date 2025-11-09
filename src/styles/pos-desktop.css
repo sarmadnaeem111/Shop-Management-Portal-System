@@ -1,0 +1,525 @@
+/* Desktop POS Application Styles */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Removed global body overflow: hidden - it was preventing scrolling on all pages */
+/* POS page handles its own scrolling internally */
+
+.pos-desktop-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+/* Shift content to the right when app sidebar (250px) is present on desktop */
+@media (min-width: 992px) {
+  .pos-desktop-container {
+    margin-left: 250px;
+    width: calc(100vw - 250px);
+  }
+}
+
+/* Left Sidebar */
+.pos-sidebar {
+  width: 60px;
+  background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+.pos-sidebar-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  transition: all 0.3s;
+}
+
+.pos-sidebar-icon:hover {
+  background-color: rgba(255,255,255,0.2);
+}
+
+.pos-sidebar-icon i {
+  font-size: 24px;
+}
+
+.pos-sidebar-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  margin-top: auto;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
+/* Main Content Area */
+.pos-main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+  overflow: hidden;
+}
+
+/* Top Header */
+.pos-top-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.pos-header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 14px;
+}
+
+.pos-header-title {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.pos-header-center {
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  letter-spacing: 1px;
+}
+
+.pos-header-right {
+  cursor: pointer;
+}
+
+/* Invoice Content */
+.pos-invoice-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  padding: 30px 40px;
+  background-color: #f5f5f5;
+}
+
+.pos-invoice-title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+/* Top Controls Row */
+.pos-top-controls-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.pos-input-label {
+  font-weight: 600;
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.pos-input-field {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.pos-input-field:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.25);
+}
+
+/* Checkboxes Row */
+.pos-checkboxes-row {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 20px;
+}
+
+.pos-checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pos-checkbox-group input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.pos-checkbox-group label {
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Top Action Buttons */
+.pos-action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.pos-btn-action {
+  padding: 10px 24px;
+  background-color: #f1f5f9;
+  color: #667eea;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 14px;
+}
+
+.pos-btn-action:hover {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+}
+
+/* Item Table Header */
+.pos-table-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 12px 15px;
+  display: grid;
+  grid-template-columns: 60px 100px 2fr 100px 120px 90px 100px 130px;
+  gap: 15px;
+  font-weight: 600;
+  font-size: 13px;
+  border-radius: 4px;
+}
+
+.pos-table-header-cell {
+  text-align: center;
+}
+
+/* Table Body */
+.pos-table-body {
+  border: 1px solid #ddd;
+  border-top: none;
+  background-color: white;
+  min-height: 300px;
+}
+
+.pos-table-row {
+  display: grid;
+  grid-template-columns: 60px 100px 2fr 100px 120px 90px 100px 130px;
+  gap: 15px;
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  align-items: center;
+}
+
+.pos-table-row:hover {
+  background-color: #f9f9f9;
+}
+
+.pos-table-cell-input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 13px;
+  text-align: center;
+}
+
+.pos-table-cell-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.25);
+}
+
+.pos-table-cell-text {
+  text-align: center;
+  font-size: 13px;
+}
+
+/* Empty State */
+.pos-empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: #999;
+}
+
+.pos-empty-state-icon {
+  font-size: 60px;
+  margin-bottom: 15px;
+  opacity: 0.3;
+}
+
+/* Search Bar */
+.pos-search-bar {
+  margin-bottom: 20px;
+}
+
+.pos-search-input {
+  width: 100%;
+  max-width: 300px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Bottom Summary Section */
+.pos-bottom-section {
+  background-color: white;
+  border-top: 2px solid #e0e0e0;
+  padding: 25px 40px;
+}
+
+.pos-bottom-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+}
+
+.pos-summary-group {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pos-summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pos-summary-label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #555;
+}
+
+.pos-summary-value {
+  font-weight: bold;
+  font-size: 18px;
+  color: #333;
+  min-width: 120px;
+  text-align: right;
+}
+
+.pos-summary-input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 150px;
+}
+
+.pos-amount-box {
+  background-color: #000;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 4px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: right;
+  min-width: 150px;
+}
+
+.pos-customer-type {
+  text-align: right;
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* Bottom Action Buttons */
+.pos-bottom-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.pos-btn-large {
+  padding: 15px 40px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  min-width: 180px;
+}
+
+.pos-btn-hold {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.pos-btn-hold:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.pos-btn-save {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.pos-btn-save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.pos-btn-reset {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.pos-btn-reset:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* Print Styles */
+@media print {
+  .pos-sidebar,
+  .pos-top-header,
+  .pos-action-buttons,
+  .pos-checkboxes-row,
+  .pos-top-controls-row,
+  .pos-top-actions,
+  .pos-invoice-title,
+  .pos-bottom-actions {
+    display: none !important;
+  }
+  
+  .pos-desktop-container {
+    display: block !important;
+    background: white !important;
+  }
+  
+  .pos-invoice-wrapper {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  .pos-table-header {
+    background: #000 !important;
+    color: white !important;
+  }
+  
+  body {
+    background: white !important;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+  .pos-table-header,
+  .pos-table-row {
+    grid-template-columns: 50px 80px 2fr 80px 100px 80px 90px 110px;
+    gap: 10px;
+  }
+}
+
+/* Mobile responsive layout */
+@media (max-width: 768px) {
+  body {
+    overflow: auto;
+  }
+  .pos-desktop-container {
+    height: auto;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+  .pos-sidebar {
+    display: none;
+  }
+  .pos-invoice-wrapper {
+    padding: 16px;
+  }
+  .pos-top-header {
+    padding: 10px 12px;
+  }
+  .pos-invoice-title {
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+  .pos-top-controls-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .pos-checkboxes-row {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .pos-action-buttons {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .pos-btn-action {
+    flex: 1 1 30%;
+    min-width: 120px;
+    padding: 10px 12px;
+  }
+  /* Make the table horizontally scrollable on small screens */
+  .pos-table-header,
+  .pos-table-body {
+    overflow-x: auto;
+  }
+  .pos-table-header {
+    min-width: 900px;
+  }
+  .pos-table-body {
+    min-width: 900px;
+  }
+  .pos-bottom-section {
+    padding: 16px;
+  }
+  .pos-bottom-wrapper {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .pos-summary-input {
+    width: 120px;
+  }
+  .pos-amount-box {
+    min-width: unset;
+    width: 140px;
+  }
+  .pos-bottom-actions {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .pos-btn-large {
+    flex: 1 1 45%;
+    min-width: 140px;
+    padding: 12px 16px;
+    font-size: 15px;
+  }
+}
+

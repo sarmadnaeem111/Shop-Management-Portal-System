@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt Total Column Test - Before vs After</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .receipt-container {
+            background: white;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 400px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border: 1px solid #dee2e6;
+        }
+        .shop-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .shop-header h3 {
+            margin: 0;
+            color: #333;
+        }
+        .receipt-info {
+            margin-bottom: 20px;
+        }
+        .receipt-table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .receipt-table th,
+        .receipt-table td {
+            padding: 8px;
+            text-align: left;
+        }
+        .receipt-table th.text-end,
+        .receipt-table td.text-end {
+            text-align: right;
+        }
+        .receipt-table th.text-center,
+        .receipt-table td.text-center {
+            text-align: center;
+        }
+        .divider {
+            border-top: 1px solid #dee2e6;
+            margin: 20px 0;
+        }
+        .thank-you {
+            text-align: center;
+            margin-top: 20px;
+            font-style: italic;
+        }
+        .comparison-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .comparison-item {
+            flex: 1;
+            min-width: 300px;
+            max-width: 450px;
+        }
+        .label {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .label.before {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .label.after {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        @media print {
+            body {
+                background-color: white !important;
+            }
+            .comparison-container {
+                flex-direction: column;
+            }
+            .label {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Receipt Total Column Alignment Test</h1>
+        <p class="text-center text-muted mb-5">Compare the old layout (wrong column alignment) vs new layout (correct Total column alignment)</p>
+        
+        <div class="comparison-container">
+            <!-- BEFORE: Wrong column alignment -->
+            <div class="comparison-item">
+                <div class="label before">❌ BEFORE: Wrong Column Alignment</div>
+                <div class="receipt-container">
+                    <div class="shop-header">
+                        <h3>ABC Supermarket</h3>
+                        <p class="mb-0">123 Main Street, City</p>
+                        <p>Tel: 555-1234</p>
+                    </div>
+                    
+                    <div class="receipt-info">
+                        <p class="mb-1"><strong>Receipt #:</strong> 001234</p>
+                        <p class="mb-1"><strong>Date:</strong> 2024-01-15</p>
+                        <p class="mb-1"><strong>Cashier:</strong> John Doe</p>
+                    </div>
+                    
+                    <table class="table table-sm receipt-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th class="text-end">Price</th>
+                                <th class="text-center">Qty</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Bread</td>
+                                <td class="text-end">$2.50</td>
+                                <td class="text-center">2</td>
+                                <td class="text-end">$5.00</td>
+                            </tr>
+                            <tr>
+                                <td>Milk</td>
+                                <td class="text-end">$3.00</td>
+                                <td class="text-center">1</td>
+                                <td class="text-end">$3.00</td>
+                            </tr>
+                            <tr>
+                                <td>Eggs</td>
+                                <td class="text-end">$4.00</td>
+                                <td class="text-center">1</td>
+                                <td class="text-end">$4.00</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <!-- WRONG: colSpan="2" puts subtotal in Qty column -->
+                            <tr>
+                                <th colspan="2" class="text-end">Subtotal:</th>
+                                <th class="text-end">$12.00</th>
+                            </tr>
+                            <tr>
+                                <th colspan="2" class="text-end">Discount:</th>
+                                <th class="text-end">$2.00</th>
+                            </tr>
+                            <tr>
+                                <th colspan="2" class="text-end">Total:</th>
+                                <th class="text-end">$10.00</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    
+                    <div class="thank-you">
+                        <p>Thank you for your business!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AFTER: Correct column alignment -->
+            <div class="comparison-item">
+                <div class="label after">✅ AFTER: Correct Total Column Alignment</div>
+                <div class="receipt-container">
+                    <div class="shop-header">
+                        <h3>ABC Supermarket</h3>
+                        <p class="mb-0">123 Main Street, City</p>
+                        <p>Tel: 555-1234</p>
+                    </div>
+                    
+                    <div class="receipt-info">
+                        <p class="mb-1"><strong>Receipt #:</strong> 001234</p>
+                        <p class="mb-1"><strong>Date:</strong> 2024-01-15</p>
+                        <p class="mb-1"><strong>Cashier:</strong> John Doe</p>
+                    </div>
+                    
+                    <table class="table table-sm receipt-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th class="text-end">Price</th>
+                                <th class="text-center">Qty</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Bread</td>
+                                <td class="text-end">$2.50</td>
+                                <td class="text-center">2</td>
+                                <td class="text-end">$5.00</td>
+                            </tr>
+                            <tr>
+                                <td>Milk</td>
+                                <td class="text-end">$3.00</td>
+                                <td class="text-center">1</td>
+                                <td class="text-end">$3.00</td>
+                            </tr>
+                            <tr>
+                                <td>Eggs</td>
+                                <td class="text-end">$4.00</td>
+                                <td class="text-center">1</td>
+                                <td class="text-end">$4.00</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <!-- CORRECT: colSpan="3" puts subtotal in Total column -->
+                            <tr>
+                                <th colspan="3" class="text-end">Subtotal:</th>
+                                <th class="text-end">$12.00</th>
+                            </tr>
+                            <tr>
+                                <th colspan="3" class="text-end">Discount:</th>
+                                <th class="text-end">$2.00</th>
+                            </tr>
+                            <tr>
+                                <th colspan="3" class="text-end">Total:</th>
+                                <th class="text-end">$10.00</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    
+                    <div class="thank-you">
+                        <p>Thank you for your business!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <button class="btn btn-primary me-2" onclick="window.print()">Print Both Examples</button>
+            <button class="btn btn-secondary" onclick="printCorrectOnly()">Print Correct Layout Only</button>
+        </div>
+        
+        <div class="mt-5 alert alert-info">
+            <h5>Key Changes Made:</h5>
+            <ul>
+                <li><strong>Subtotal row:</strong> Changed from <code>colSpan="2"</code> to <code>colSpan="3"</code></li>
+                <li><strong>Discount row:</strong> Changed from <code>colSpan="2"</code> to <code>colSpan="3"</code></li>
+                <li><strong>Total row:</strong> Changed from <code>colSpan="2"</code> to <code>colSpan="3"</code></li>
+                <li><strong>Result:</strong> All amounts now properly align in the "Total" column instead of the "Qty" column</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function printCorrectOnly() {
+            const correctLayout = document.querySelector('.comparison-item:last-child .receipt-container').innerHTML;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Correct Receipt Layout</title>
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+                    <style>
+                        body { padding: 20px; }
+                        .receipt-container {
+                            background: white;
+                            padding: 20px;
+                            margin: 0 auto;
+                            max-width: 400px;
+                            border: 1px solid #dee2e6;
+                        }
+                        .shop-header { text-align: center; margin-bottom: 20px; }
+                        .receipt-info { margin-bottom: 20px; }
+                        .receipt-table { width: 100%; margin-bottom: 20px; }
+                        .receipt-table th, .receipt-table td { padding: 8px; }
+                        .text-end { text-align: right; }
+                        .text-center { text-align: center; }
+                        .thank-you { text-align: center; margin-top: 20px; }
+                        @media print {
+                            body { background: white !important; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${correctLayout}
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
+</body>
+</html>

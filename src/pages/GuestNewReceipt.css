@@ -1,0 +1,75 @@
+/* Guest Receipt Specific Styles */
+.guest-receipt-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.guest-receipt-container .card {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.guest-receipt-container .card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.guest-receipt-container .totals-section {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.guest-receipt-container .totals-section div {
+  margin-bottom: 5px;
+}
+
+.guest-receipt-container .totals-section div:last-child {
+  margin-bottom: 0;
+  border-top: 2px solid #495057;
+  padding-top: 5px;
+}
+
+.guest-receipt-container .form-control[readonly] {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}
+
+.guest-receipt-container .btn-outline-success {
+  border-width: 2px;
+  font-weight: 600;
+}
+
+.guest-receipt-container .btn-outline-success:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Print styles for guest receipts */
+@media print {
+  .guest-receipt-container .card-header,
+  .guest-receipt-container .btn {
+    display: none !important;
+  }
+  
+  .guest-receipt-container .card {
+    box-shadow: none !important;
+    border: 1px solid #000 !important;
+  }
+  
+  .guest-receipt-container {
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .guest-receipt-container .row.mb-3 .col-md-4 {
+    margin-bottom: 1rem;
+  }
+  
+  .guest-receipt-container .totals-section {
+    margin-top: 1rem;
+  }
+}

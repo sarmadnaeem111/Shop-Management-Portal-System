@@ -1,0 +1,186 @@
+.app-sidebar {
+  width: 250px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 200;
+  padding: 20px 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.15);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-brand a {
+  color: #ffffff !important;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.sidebar-nav .sidebar-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+  transition: all .15s ease-in-out;
+  display: flex;
+  align-items: center;
+  padding-left: .75rem !important;
+  padding-right: .5rem !important;
+}
+
+.sidebar-nav .sidebar-link i {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.sidebar-nav .sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  transform: translateX(2px);
+}
+
+.sidebar-nav .sidebar-link.active {
+  background: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  border-left: 3px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-nav .sidebar-link.active i {
+  color: #ffffff !important;
+}
+
+.sidebar-footer {
+  border-top: 1px dashed rgba(255, 255, 255, 0.3);
+  padding-top: .75rem;
+}
+
+.sidebar-footer .btn-outline-danger {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+}
+
+.sidebar-footer .btn-outline-danger:hover {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #ffffff;
+}
+
+.sidebar-footer button,
+.sidebar-footer .btn {
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  color: #ffffff !important;
+}
+
+.sidebar-footer button:hover,
+.sidebar-footer .btn:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.8) !important;
+  color: #ffffff !important;
+}
+
+.sidebar-footer .nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.sidebar-footer .nav-link:hover {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Mobile Sidebar Styling - Matching Desktop Theme */
+.app-mobile-sidebar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.15);
+}
+
+.app-mobile-sidebar .offcanvas-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 1.25rem;
+}
+
+.app-mobile-sidebar .offcanvas-title {
+  color: #ffffff !important;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.app-mobile-sidebar .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+  opacity: 0.9;
+}
+
+.app-mobile-sidebar .btn-close:hover {
+  opacity: 1;
+}
+
+.app-mobile-sidebar .offcanvas-body {
+  padding-top: 0.5rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.app-mobile-sidebar .sidebar-nav .sidebar-link {
+  padding: .5rem .25rem;
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.app-mobile-sidebar .sidebar-nav .sidebar-link i {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.app-mobile-sidebar .sidebar-nav .sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+}
+
+.app-mobile-sidebar .sidebar-nav .sidebar-link.active {
+  background: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  border-left: 3px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.app-mobile-sidebar .sidebar-nav .sidebar-link.active i {
+  color: #ffffff !important;
+}
+
+.app-mobile-sidebar .btn-outline-danger {
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  color: #ffffff !important;
+}
+
+.app-mobile-sidebar .btn-outline-danger:hover {
+  background-color: #dc3545 !important;
+  border-color: #dc3545 !important;
+  color: #ffffff !important;
+}
+
+.app-mobile-sidebar .nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.app-mobile-sidebar .nav-link:hover {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Smooth sidebar scrolling */
+.app-sidebar {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+.app-sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+.app-sidebar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+}
+.app-sidebar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.app-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
