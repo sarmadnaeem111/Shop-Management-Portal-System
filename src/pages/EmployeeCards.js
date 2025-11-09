@@ -119,9 +119,25 @@ const EmployeeCards = () => {
                     {/* Card Body */}
                     <div className="card-body-content">
                       <div className="card-main-row">
-                        {/* Employee Photo Placeholder */}
+                        {/* Employee Photo */}
                         <div className="employee-photo">
-                          <div className="photo-placeholder">
+                          {emp.imageUrl && emp.imageUrl.trim() !== '' ? (
+                            <img 
+                              src={emp.imageUrl} 
+                              alt={emp.name || 'Employee'} 
+                              className="employee-photo-img"
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                                if (e.target.nextSibling) {
+                                  e.target.nextSibling.style.display = 'flex';
+                                }
+                              }}
+                            />
+                          ) : null}
+                          <div 
+                            className="photo-placeholder"
+                            style={{ display: (emp.imageUrl && emp.imageUrl.trim() !== '') ? 'none' : 'flex' }}
+                          >
                             <i className="bi bi-person-fill"></i>
                           </div>
                         </div>
@@ -299,6 +315,17 @@ const EmployeeCards = () => {
         .employee-photo {
           flex-shrink: 0;
           width: 65px;
+        }
+
+        .employee-photo-img {
+          width: 65px;
+          height: 65px;
+          border-radius: 8px;
+          border: 2px solid #ffffff;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+          object-fit: cover;
+          display: block;
+          background: #f0f0f0;
         }
 
         .photo-placeholder {
