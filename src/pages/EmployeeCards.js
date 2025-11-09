@@ -76,13 +76,6 @@ const EmployeeCards = () => {
     const cardElement = document.getElementById(`employee-card-${employee.id}`);
     if (!cardElement) return;
 
-    // Create a new window for printing
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) {
-      alert('Please allow popups to print the card.');
-      return;
-    }
-
     // Get the card HTML
     const cardHTML = cardElement.outerHTML;
 
@@ -91,8 +84,21 @@ const EmployeeCards = () => {
       .map(style => style.innerHTML)
       .join('\n');
 
-    // Create the print document
-    printWindow.document.write(`
+    // Create a hidden iframe for printing
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    iframe.style.opacity = '0';
+    document.body.appendChild(iframe);
+
+    // Write content to iframe
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+    iframeDoc.open();
+    iframeDoc.write(`
       <!DOCTYPE html>
       <html>
         <head>
@@ -140,14 +146,32 @@ const EmployeeCards = () => {
         </body>
       </html>
     `);
-
-    printWindow.document.close();
+    iframeDoc.close();
 
     // Wait for content to load, then print
+    iframe.onload = () => {
+      setTimeout(() => {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        // Remove iframe after printing
+        setTimeout(() => {
+          document.body.removeChild(iframe);
+        }, 1000);
+      }, 250);
+    };
+
+    // Fallback if onload doesn't fire
     setTimeout(() => {
-      printWindow.focus();
-      printWindow.print();
-    }, 250);
+      if (iframe.parentNode) {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        setTimeout(() => {
+          if (iframe.parentNode) {
+            document.body.removeChild(iframe);
+          }
+        }, 1000);
+      }
+    }, 500);
   };
 
   return (
