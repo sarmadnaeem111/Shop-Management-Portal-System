@@ -79,33 +79,6 @@ const NewReceipt = () => {
     }
   }, [currentUser]);
 
-  // Handle Enter key to save and print receipt
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      // Check if Enter key is pressed
-      if (e.key === 'Enter' && !loading && items.length > 0) {
-        // Check if the user is not typing in an input field
-        const activeElement = document.activeElement;
-        const isInputField = activeElement && (
-          activeElement.tagName === 'INPUT' || 
-          activeElement.tagName === 'SELECT' ||
-          activeElement.tagName === 'TEXTAREA'
-        );
-        
-        // If not in an input field, save and print the receipt
-        if (!isInputField) {
-          e.preventDefault();
-          handleSubmit(e);
-        }
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyPress);
-    return () => {
-      document.removeEventListener('keydown', handleKeyPress);
-    };
-  }, [loading, items, handleSubmit]);
-
   // Handle barcode scan from scanner hardware
   const handleScan = (data) => {
     if (!data) return;
@@ -231,7 +204,7 @@ const NewReceipt = () => {
   };
 
   // Calculate totals
-  const calculateTotals = () => {
+  const calculateTotals = useCallback(() => {
     const totalQuantities = items.reduce((sum, item) => 
       sum + parseFloat(item.quantity || 0), 0);
     const totalAmount = items.reduce((sum, item) => 
@@ -250,7 +223,7 @@ const NewReceipt = () => {
       balance: balance.toFixed(2),
       return: balance < 0 ? Math.abs(balance).toFixed(2) : '0.00'
     };
-  };
+  }, [items, discount, tax, enterAmount]);
 
   const totals = calculateTotals();
 
@@ -311,6 +284,20 @@ const NewReceipt = () => {
     setProductCode('');
   };
 
+  // Reset form
+  const resetForm = useCallback(() => {
+    setItems([]);
+    setSelectedProduct('');
+    setProductCode('');
+    setCustomer('Walk-in Customer');
+    setDiscount('0');
+    setTax('0');
+    setEnterAmount('0');
+    setSelectedEmployee(null);
+    setError('');
+    setSuccess('');
+  }, []);
+
   // Handle form submission
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
@@ -354,7 +341,7 @@ const NewReceipt = () => {
         discount: parseFloat(discount) || 0,
         paymentMethod: 'Cash',
         cashGiven: parseFloat(enterAmount) || 0,
-        change: parseFloat(enterAmount) - parseFloat(totals.payable) || 0,
+        change: parseFloat(enterAmount) - parseFloat(totals.payable),
         employeeName: selectedEmployee ? selectedEmployee.name : null,
         employeeId: selectedEmployee ? selectedEmployee.id : null
       };
@@ -388,21 +375,34 @@ const NewReceipt = () => {
     } finally {
       setLoading(false);
     }
-  }, [items, currentUser, shopData, transactionId, discount, enterAmount, selectedEmployee, autoPrint]);
+  }, [items, currentUser, shopData, transactionId, discount, enterAmount, selectedEmployee, autoPrint, calculateTotals, printReceipt, resetForm]);
 
-  // Reset form
-  const resetForm = () => {
-    setItems([]);
-    setSelectedProduct('');
-    setProductCode('');
-    setCustomer('Walk-in Customer');
-    setDiscount('0');
-    setTax('0');
-    setEnterAmount('0');
-    setSelectedEmployee(null);
-    setError('');
-    setSuccess('');
-  };
+  // Handle Enter key to save and print receipt
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      // Check if Enter key is pressed
+      if (e.key === 'Enter' && !loading && items.length > 0) {
+        // Check if the user is not typing in an input field
+        const activeElement = document.activeElement;
+        const isInputField = activeElement && (
+          activeElement.tagName === 'INPUT' || 
+          activeElement.tagName === 'SELECT' ||
+          activeElement.tagName === 'TEXTAREA'
+        );
+        
+        // If not in an input field, save and print the receipt
+        if (!isInputField) {
+          e.preventDefault();
+          handleSubmit(e);
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [loading, items, handleSubmit]);
 
   // Get product options for select
   const productOptions = stockLoaded ? 
@@ -413,10 +413,11 @@ const NewReceipt = () => {
     employees.map(emp => ({ value: emp.id, label: emp.name })) : [];
 
   // Print the receipt
-  const printReceipt = () => {
+  const printReceipt = useCallback(() => {
     const printWindow = window.open('', '_blank');
     const currentDate = new Date().toLocaleDateString();
     const currentTime = new Date().toLocaleTimeString();
+    const totals = calculateTotals();
     
     const receiptHTML = `
       <!DOCTYPE html>
@@ -633,7 +634,7 @@ const NewReceipt = () => {
     setTimeout(() => {
       printWindow.print();
     }, 250);
-  };
+  }, [shopData, transactionId, items, discount, tax, enterAmount, calculateTotals]);
 
   return (
     <>
