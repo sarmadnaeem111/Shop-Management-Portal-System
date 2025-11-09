@@ -100,7 +100,7 @@ const EmployeeCards = () => {
             <Spinner animation="border" variant="primary" />
           </div>
         ) : (
-          <Row className="g-4">
+          <Row className="employee-cards-row">
             {filteredEmployees.map(emp => (
               <Col key={emp.id} xs={12} sm={6} md={4} lg={3} xl={3}>
                 <div className="employee-card-wrapper">
@@ -190,10 +190,35 @@ const EmployeeCards = () => {
       </Container>
 
       <style>{`
+        .employee-cards-row {
+          display: flex !important;
+          flex-wrap: wrap !important;
+          gap: 30px !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        
+        .employee-cards-row > * {
+          flex: 0 0 auto !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          max-width: none !important;
+        }
+        
+        .employee-cards-row .col,
+        .employee-cards-row [class*="col-"] {
+          margin: 0 !important;
+          padding: 0 !important;
+          max-width: none !important;
+        }
+        
         .employee-card-wrapper {
           display: flex;
           flex-direction: column;
           align-items: center;
+          width: 100%;
+          margin: 0;
+          padding: 0;
         }
 
         .employee-id-card {
@@ -205,7 +230,7 @@ const EmployeeCards = () => {
           position: relative;
           overflow: hidden;
           border: 2px solid #e0e0e0;
-          margin: 0 auto;
+          margin: 0 auto !important;
           display: flex;
           flex-direction: column;
         }
@@ -223,6 +248,7 @@ const EmployeeCards = () => {
           border-radius: 50%;
           z-index: 10;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          
         }
 
         /* Card Header */
