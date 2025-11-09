@@ -668,7 +668,7 @@ const SalesAnalytics = () => {
         </Card>
       </>
     );
-  }, [analytics, profitMargin, generateEmployeeSummary]);
+  }, [analytics, profitMargin, generateEmployeeSummary, generateCSVReport, generatePDFReport]);
 
   // Render detailed data based on view mode - memoized to prevent unnecessary recalculations
   const renderDetailedData = useMemo(() => {
