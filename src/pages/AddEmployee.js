@@ -8,6 +8,7 @@ import MainNavbar from '../components/Navbar';
 import { Translate, useTranslatedAttribute } from '../utils';
 import PageHeader from '../components/PageHeader';
 import { v4 as uuidv4 } from 'uuid';
+import cloudinaryConfig from '../utils/cloudinaryConfig';
 
 const AddEmployee = () => {
   const { currentUser } = useAuth();
@@ -23,11 +24,14 @@ const AddEmployee = () => {
     email: '',
     address: '',
     joiningDate: '',
-    salary: ''
+    salary: '',
+    imageUrl: ''
   });
   
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
   
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,6 +39,66 @@ const AddEmployee = () => {
       ...formData,
       [name]: value
     });
+  };
+
+  // Handle image upload to Cloudinary
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    // Check file type
+    if (!file.type.match('image.*')) {
+      setError('Please select an image file');
+      return;
+    }
+    
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Image file should be less than 5MB');
+      return;
+    }
+    
+    setIsUploading(true);
+    setError('');
+    
+    // Create preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+    
+    try {
+      // Create form data for upload
+      const uploadFormData = new FormData();
+      uploadFormData.append('file', file);
+      uploadFormData.append('upload_preset', cloudinaryConfig.upload_preset);
+      
+      // Upload to Cloudinary
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloud_name}/image/upload`,
+        {
+          method: 'POST',
+          body: uploadFormData
+        }
+      );
+      
+      if (!response.ok) {
+        throw new Error('Failed to upload image');
+      }
+      
+      const data = await response.json();
+      setFormData({
+        ...formData,
+        imageUrl: data.secure_url
+      });
+    } catch (err) {
+      console.error('Error uploading image:', err);
+      setError('Failed to upload image. Please try again.');
+      setImagePreview(null);
+    } finally {
+      setIsUploading(false);
+    }
   };
   
   const handleSubmit = async (e) => {
@@ -153,6 +217,51 @@ const AddEmployee = () => {
                   value={formData.salary}
                   onChange={handleChange}
                 />
+              </Form.Group>
+              
+              <Form.Group className="mb-3">
+                <Form.Label><Translate textKey="employeeImage" fallback="Employee Image" /></Form.Label>
+                <Form.Control
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  disabled={isUploading}
+                />
+                {isUploading && (
+                  <Form.Text className="text-muted">
+                    <Translate textKey="uploading" fallback="Uploading..." />
+                  </Form.Text>
+                )}
+                {imagePreview && (
+                  <div className="mt-3">
+                    <img 
+                      src={imagePreview} 
+                      alt="Preview" 
+                      style={{ 
+                        maxWidth: '200px', 
+                        maxHeight: '200px', 
+                        borderRadius: '8px',
+                        border: '2px solid #e0e0e0',
+                        objectFit: 'cover'
+                      }} 
+                    />
+                  </div>
+                )}
+                {formData.imageUrl && !imagePreview && (
+                  <div className="mt-3">
+                    <img 
+                      src={formData.imageUrl} 
+                      alt="Employee" 
+                      style={{ 
+                        maxWidth: '200px', 
+                        maxHeight: '200px', 
+                        borderRadius: '8px',
+                        border: '2px solid #e0e0e0',
+                        objectFit: 'cover'
+                      }} 
+                    />
+                  </div>
+                )}
               </Form.Group>
               
               <div className="d-flex justify-content-between">
