@@ -204,3 +204,51 @@ export const restoreStockQuantity = async (shopId, items) => {
     throw error;
   }
 };
+
+// Record a stock movement (IN/OUT) for history
+export const recordStockMovement = async (movement) => {
+  // movement: { shopId, itemId, itemName, type: 'IN'|'OUT', quantity, unit, costPrice?, note?, supplier?, reference?, createdAt? }
+  const movementsRef = collection(db, 'stockMovements');
+  const payload = {
+    ...movement,
+    createdAt: movement.createdAt || new Date().toISOString()
+  };
+  const docRef = await addDoc(movementsRef, payload);
+  return docRef.id;
+};
+
+// Add stock to an existing item and record movement
+export const addStockToItem = async (shopId, itemId, quantityToAdd, options = {}) => {
+  // options: { costPrice, note, supplier, itemSnapshot }
+  const stockDocRef = doc(db, 'stock', itemId);
+  const snap = options.itemSnapshot || await getDoc(stockDocRef);
+  if (!snap.exists()) throw new Error('Stock item not found');
+  const item = { id: snap.id, ...snap.data() };
+  const newQuantity = (parseFloat(item.quantity) || 0) + parseFloat(quantityToAdd || 0);
+  await updateDoc(stockDocRef, { quantity: newQuantity, updatedAt: new Date().toISOString() });
+  await recordStockMovement({
+    shopId,
+    itemId,
+    itemName: item.name,
+    type: 'IN',
+    quantity: parseFloat(quantityToAdd || 0),
+    unit: item.quantityUnit || 'units',
+    costPrice: options.costPrice != null ? parseFloat(options.costPrice) : undefined,
+    note: options.note || '',
+    supplier: options.supplier || '',
+    reference: options.reference || ''
+  });
+  return { itemId, newQuantity };
+};
+
+// Fetch stock movements for a shop (optionally filtered by itemId)
+export const getStockMovements = async (shopId, itemId) => {
+  const movementsRef = collection(db, 'stockMovements');
+  let q = query(movementsRef, where('shopId', '==', shopId));
+  const all = await getDocs(q);
+  const list = all.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .filter(m => (itemId ? m.itemId === itemId : true))
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  return list;
+};
