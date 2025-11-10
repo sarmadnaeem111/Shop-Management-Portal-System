@@ -309,12 +309,20 @@ const ViewStock = () => {
       <Container>
         <div className="d-flex justify-content-between align-items-center mb-4">
           <PageHeader title="Stock Inventory" icon="bi-box-seam" color="primary" />
-          <Button 
-            variant="success" 
-            onClick={() => navigate('/add-stock')}
-          >
-            <Translate textKey="addNewItem" />
-          </Button>
+          <div className="d-flex gap-2">
+            <Button 
+              variant="outline-primary" 
+              onClick={() => navigate('/add-stock-entry')}
+            >
+              Add Stock
+            </Button>
+            <Button 
+              variant="success" 
+              onClick={() => navigate('/add-stock')}
+            >
+              <Translate textKey="addNewItem" />
+            </Button>
+          </div>
         </div>
         
         <Card className="mb-4">
@@ -438,6 +446,14 @@ const ViewStock = () => {
                               className="me-1 mb-1"
                             >
                               <Translate textKey="edit" />
+                            </Button>
+                            <Button 
+                              variant="outline-success" 
+                              size="sm"
+                              onClick={() => navigate('/add-stock-entry', { state: { preselectId: item.id } })}
+                              className="me-1 mb-1"
+                            >
+                              Add Stock
                             </Button>
                             <Button 
                               variant="outline-secondary" 
