@@ -23,6 +23,8 @@ import ReturnProducts from './pages/ReturnProducts';
 import ViewStock from './pages/ViewStock';
 import AddStockItem from './pages/AddStockItem';
 import EditStockItem from './pages/EditStockItem';
+import AddStockEntry from './pages/AddStockEntry';
+import StockHistory from './pages/StockHistory';
 import Employees from './pages/Employees';
 import AddEmployee from './pages/AddEmployee';
 import EditEmployee from './pages/EditEmployee';
@@ -135,10 +137,24 @@ function AppContent() {
               </PrivateRoute>
             </ErrorBoundary>
           } />
+          <Route path="/add-stock-entry" element={
+            <ErrorBoundary>
+              <PrivateRoute>
+                <AddStockEntry />
+              </PrivateRoute>
+            </ErrorBoundary>
+          } />
           <Route path="/edit-stock/:id" element={
             <ErrorBoundary>
               <PrivateRoute>
                 <EditStockItem />
+              </PrivateRoute>
+            </ErrorBoundary>
+          } />
+          <Route path="/stock-history" element={
+            <ErrorBoundary>
+              <PrivateRoute>
+                <StockHistory />
               </PrivateRoute>
             </ErrorBoundary>
           } />
