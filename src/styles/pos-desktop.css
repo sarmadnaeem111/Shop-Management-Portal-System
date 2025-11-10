@@ -156,6 +156,24 @@
   box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.25);
 }
 
+/* Quick Shortcuts row */
+.pos-quick-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -6px 0 14px 0;
+}
+
+.pos-chip {
+  background: #eef2ff;
+  color: #4f46e5;
+  border: 1px solid rgba(79, 70, 229, 0.15);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
 /* Checkboxes Row */
 .pos-checkboxes-row {
   display: flex;
@@ -214,6 +232,9 @@
   font-weight: 600;
   font-size: 13px;
   border-radius: 4px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
 }
 
 .pos-table-header-cell {
@@ -472,6 +493,14 @@
   .pos-top-controls-row {
     grid-template-columns: 1fr;
     gap: 12px;
+  }
+  .pos-quick-shortcuts {
+    gap: 6px;
+    margin: 6px 0 12px 0;
+  }
+  .pos-chip {
+    font-size: 11px;
+    padding: 5px 8px;
   }
   .pos-checkboxes-row {
     flex-wrap: wrap;
