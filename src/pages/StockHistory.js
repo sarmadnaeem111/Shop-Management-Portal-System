@@ -1,0 +1,117 @@
+import React, { useEffect, useState } from 'react';
+import { Container, Card, Table, Button, Form } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import MainNavbar from '../components/Navbar';
+import PageHeader from '../components/PageHeader';
+import { useAuth } from '../contexts/AuthContext';
+import { getStockMovements, getShopStock } from '../utils/stockUtils';
+
+const StockHistory = () => {
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
+  const [movements, setMovements] = useState([]);
+  const [items, setItems] = useState([]);
+  const [filterItem, setFilterItem] = useState('');
+
+  useEffect(() => {
+    if (!currentUser) return;
+    getShopStock(currentUser.uid).then(setItems);
+    getStockMovements(currentUser.uid).then(setMovements);
+  }, [currentUser]);
+
+  const filtered = movements.filter(m => filterItem ? m.itemId === filterItem : true);
+
+  const printHistory = () => {
+    const win = window.open('', '_blank');
+    const rows = filtered.map(m => `
+      <tr>
+        <td>${m.itemName || '-'}</td>
+        <td>${m.type}</td>
+        <td style="text-align:right">${m.quantity}</td>
+        <td>${m.unit || '-'}</td>
+        <td>${m.supplier || '-'}</td>
+        <td>${m.note || '-'}</td>
+        <td>${new Date(m.createdAt).toLocaleString()}</td>
+      </tr>
+    `).join('');
+    win.document.write(`
+      <html><head><title>Stock History</title>
+      <style>
+        body{font-family:Arial,sans-serif;padding:20px;}
+        table{width:100%;border-collapse:collapse}
+        th,td{border:1px solid #ccc;padding:6px;font-size:12px}
+        th{background:#f3f4f6;text-align:left}
+        @media print { @page { size:A4; margin:14mm } }
+      </style>
+      </head><body>
+      <h3>Stock History</h3>
+      <table><thead><tr>
+        <th>Item</th><th>Type</th><th>Qty</th><th>Unit</th><th>Supplier</th><th>Note</th><th>Time</th>
+      </tr></thead><tbody>${rows}</tbody></table>
+      </body></html>
+    `);
+    win.document.close();
+    setTimeout(()=>win.print(), 200);
+  };
+
+  return (
+    <>
+      <MainNavbar />
+      <Container className="mt-3">
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <PageHeader title="Stock History" icon="bi-clock-history" color="primary" />
+          <div className="d-flex gap-2">
+            <Button variant="secondary" onClick={() => navigate('/stock')}>Back</Button>
+            <Button variant="primary" onClick={printHistory}>Print</Button>
+          </div>
+        </div>
+        <Card>
+          <Card.Body>
+            <div className="d-flex align-items-center gap-2 mb-3">
+              <Form.Label className="mb-0">Filter item:</Form.Label>
+              <Form.Select value={filterItem} onChange={(e)=>setFilterItem(e.target.value)} style={{maxWidth: 280}}>
+                <option value="">All items</option>
+                {items.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
+              </Form.Select>
+            </div>
+            <div className="table-responsive">
+              <Table hover size="sm">
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Type</th>
+                    <th>Qty</th>
+                    <th>Unit</th>
+                    <th>Supplier</th>
+                    <th>Note</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtered.map(m => (
+                    <tr key={m.id}>
+                      <td>{m.itemName || '-'}</td>
+                      <td>{m.type}</td>
+                      <td>{m.quantity}</td>
+                      <td>{m.unit || '-'}</td>
+                      <td>{m.supplier || '-'}</td>
+                      <td>{m.note || '-'}</td>
+                      <td>{new Date(m.createdAt).toLocaleString()}</td>
+                    </tr>
+                  ))}
+                  {filtered.length === 0 && (
+                    <tr><td colSpan={7} className="text-center text-muted">No movements</td></tr>
+                  )}
+                </tbody>
+              </Table>
+            </div>
+          </Card.Body>
+        </Card>
+      </Container>
+    </>
+  );
+};
+
+export default StockHistory;
+
+
