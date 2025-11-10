@@ -725,6 +725,16 @@ const NewReceipt = () => {
               />
             </div>
           </div>
+
+          {/* Quick Shortcuts */}
+          <div className="pos-quick-shortcuts">
+            <span className="pos-chip"><i className="bi bi-lightning-charge me-1"></i>Alt + P: Product</span>
+            <span className="pos-chip"><i className="bi bi-upc-scan me-1"></i>Alt + C: Code/Scan</span>
+            <span className="pos-chip"><i className="bi bi-plus-circle me-1"></i>Enter: Add Item</span>
+            <span className="pos-chip"><i className="bi bi-percent me-1"></i>Alt + D: Discount</span>
+            <span className="pos-chip"><i className="bi bi-cash-coin me-1"></i>Alt + E: Enter Amount</span>
+            <span className="pos-chip"><i className="bi bi-printer me-1"></i>Enter (when not typing): Save & Print</span>
+          </div>
           
           {/* Checkboxes */}
           <div className="pos-checkboxes-row">
