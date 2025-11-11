@@ -122,63 +122,15 @@ const ViewReceipt = () => {
     // Create print stylesheet
     const printStyles = document.createElement('style');
     printStyles.innerHTML = `
-      @page {
-        size: ${printMode === 'thermal' ? '80mm auto' : 'A4'};
-        margin: 0;
-      }
-      body {
-        margin: 0;
-        padding: 0;
-        background: white !important;
-        color: black !important;
-        font-family: 'Courier New', monospace !important;
-      }
-      .receipt-header, .receipt-buttons, .size-controls-form {
-        display: none !important;
-      }
-      .receipt-container {
-        max-width: 100% !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        box-shadow: none !important;
-        border: none !important;
-      }
-      .table {
-        font-size: ${printMode === 'thermal' ? '11px' : '12px'} !important;
-        background: white !important;
-        color: black !important;
-        border-collapse: collapse !important;
-        border: 1px solid black !important;
-        width: 100% !important;
-      }
-      .table th, .table td {
-        padding: ${printMode === 'thermal' ? '2px 4px' : '8px'} !important;
-        background: white !important;
-        color: black !important;
-        border: 1px solid black !important;
-        border-color: black !important;
-      }
-      .table th {
-        background: #f8f9fa !important;
-        color: black !important;
-        border-bottom: 2px solid black !important;
-        font-weight: bold !important;
-      }
-      .table tr {
-        border-bottom: 1px solid black !important;
-      }
-      .table tr:last-child {
-        border-bottom: none !important;
-      }
-      h3 {
-        font-size: ${printMode === 'thermal' ? '16px' : '20px'} !important;
-        margin: ${printMode === 'thermal' ? '5px 0' : '10px 0'} !important;
-      }
-      p {
-        font-size: ${printMode === 'thermal' ? '11px' : '12px'} !important;
-        margin: ${printMode === 'thermal' ? '2px 0' : '5px 0'} !important;
-      }
+      @page { size: ${printMode === 'thermal' ? '80mm auto' : 'A4'}; margin: 0; }
+      body { margin: 0; padding: 0; background: white !important; color: black !important; font-family: 'Courier New', monospace !important; }
+      .receipt-header, .receipt-buttons, .size-controls-form { display: none !important; }
+      .receipt-container { max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; border: none !important; }
+      .table { font-size: ${printMode === 'thermal' ? '11px' : '12px'} !important; background: white !important; color: black !important; border-collapse: collapse !important; width: 100% !important; }
+      .table th, .table td { padding: ${printMode === 'thermal' ? '4px 2px' : '8px'} !important; background: white !important; color: black !important; border: 1px dotted black !important; }
+      .table th { background: transparent !important; color: black !important; border-bottom: 1px dotted black !important; font-weight: bold !important; }
+      h3 { font-size: ${printMode === 'thermal' ? '18px' : '20px'} !important; margin: ${printMode === 'thermal' ? '6px 0' : '10px 0'} !important; text-align: center !important; }
+      p { font-size: ${printMode === 'thermal' ? '11px' : '12px'} !important; margin: ${printMode === 'thermal' ? '2px 0' : '5px 0'} !important; text-align: center !important; }
     `;
     
     document.head.appendChild(printStyles);
