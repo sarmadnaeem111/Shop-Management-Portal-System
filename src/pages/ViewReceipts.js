@@ -10,7 +10,7 @@ import './ViewReceipts.css'; // Import the custom CSS
 import { Translate, useTranslatedData, useTranslatedAttribute } from '../utils';
 
 const ViewReceipts = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, activeShopId } = useAuth();
   const [receipts, setReceipts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -28,14 +28,14 @@ const ViewReceipts = () => {
   const getTranslatedAttr = useTranslatedAttribute();
 
   const fetchReceipts = useCallback(() => {
-    if (!currentUser) return;
+    if (!currentUser || !activeShopId) return;
     
     setLoading(true);
     // Create a simple query without ordering
     const receiptRef = collection(db, 'receipts');
     const receiptQuery = query(
       receiptRef,
-      where('shopId', '==', currentUser.uid)
+      where('shopId', '==', activeShopId)
     );
     
     getDocs(receiptQuery)
@@ -54,7 +54,7 @@ const ViewReceipts = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [currentUser]);
+  }, [currentUser, activeShopId]);
 
   useEffect(() => {
     fetchReceipts();
