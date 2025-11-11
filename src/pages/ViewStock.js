@@ -10,7 +10,7 @@ import { Translate, useTranslatedAttribute } from '../utils';
 import JsBarcode from 'jsbarcode';
 
 const ViewStock = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, activeShopId } = useAuth();
   const [stockItems, setStockItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -28,12 +28,12 @@ const ViewStock = () => {
   const getTranslatedAttr = useTranslatedAttribute();
 
   const fetchStock = useCallback(() => {
-    if (!currentUser) return;
+    if (!currentUser || !activeShopId) return;
     
     setLoading(true);
     
     // Create a simple function to fetch stock items
-    getShopStock(currentUser.uid)
+    getShopStock(activeShopId)
       .then(stockData => {
         console.log('Stock data fetched:', stockData);
         setStockItems(stockData);
@@ -44,7 +44,7 @@ const ViewStock = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [currentUser]);
+  }, [currentUser, activeShopId]);
 
   useEffect(() => {
     // Redirect to login if user is not authenticated
