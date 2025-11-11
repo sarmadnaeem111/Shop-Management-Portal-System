@@ -10,7 +10,7 @@ import { formatCurrency } from '../utils/receiptUtils';
 import './Expenses.css';
 
 const Expenses = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, activeShopId } = useAuth();
   const navigate = useNavigate();
   const [expenses, setExpenses] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -29,22 +29,22 @@ const Expenses = () => {
   // Fetch expenses and categories
   useEffect(() => {
     const fetchData = async () => {
-      if (!currentUser) return;
+      if (!currentUser || !activeShopId) return;
       
       setLoading(true);
       setError('');
       
       try {
         // Fetch expense categories
-        const categoriesData = await getExpenseCategories(currentUser.uid);
+        const categoriesData = await getExpenseCategories(activeShopId);
         setCategories(categoriesData);
         
         // Fetch all expenses
-        const expensesData = await getShopExpenseRecords(currentUser.uid);
+        const expensesData = await getShopExpenseRecords(activeShopId);
         setExpenses(expensesData);
         
         // Fetch expense statistics
-        const statsData = await getExpenseStatistics(currentUser.uid);
+        const statsData = await getExpenseStatistics(activeShopId);
         setStatistics(statsData);
       } catch (error) {
         console.error('Error fetching expense data:', error);
@@ -55,7 +55,7 @@ const Expenses = () => {
     };
     
     fetchData();
-  }, [currentUser]);
+  }, [currentUser, activeShopId]);
 
   // Handle category filter change
   const handleCategoryChange = (e) => {
@@ -115,7 +115,7 @@ const Expenses = () => {
       setExpenses(expenses.filter(exp => exp.id !== expenseToDelete.id));
       
       // Update statistics
-      const statsData = await getExpenseStatistics(currentUser.uid);
+      const statsData = await getExpenseStatistics(activeShopId);
       setStatistics(statsData);
       
       setShowDeleteModal(false);
