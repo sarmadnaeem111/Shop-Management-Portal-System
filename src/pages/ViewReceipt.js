@@ -335,115 +335,84 @@ const ViewReceipt = () => {
         }}>
           <Card>
             <Card.Body ref={pdfRef} className="p-4">
-              <div className="receipt-container">
-                <div className="text-center mb-4">
+              <style>{`
+                .thermal-wrap{max-width:80mm;margin:0 auto;color:#000;font-family:'Courier New',monospace}
+                .center{text-align:center}
+                .logo{max-height:36px;margin:6px auto 8px;display:block}
+                .title{font-size:20px;font-weight:700;margin:4px 0}
+                .sm{font-size:12px}
+                .sep{border-top:1px dotted #000;margin:6px 0}
+                table.thermal{width:100%;border-collapse:collapse;margin:4px 0}
+                table.thermal th{font-size:12px;font-weight:700;padding:8px 4px;border-top:1px dotted #000;border-bottom:1px dotted #000;border-right:1px dotted #000}
+                table.thermal th:first-child{border-left:1px dotted #000}
+                table.thermal td{font-size:12px;padding:8px 4px;border-bottom:1px dotted #000;border-right:1px dotted #000;vertical-align:top}
+                table.thermal td:first-child{border-left:1px dotted #000}
+                .c{text-align:center}.r{text-align:right}.wrap{white-space:pre-wrap;word-break:break-word}
+                .totals{margin-top:8px;border-top:1px dotted #000;border-bottom:1px dotted #000;padding:6px 0;font-size:12px}
+                .line{display:flex;justify-content:space-between;margin:3px 0}
+                .net{ text-align:right;font-weight:700;font-size:18px;margin-top:6px }
+                .dev{ text-align:center;margin-top:10px;padding:6px 0;font-size:10px;border-top:1px dashed #000;border-bottom:1px dashed #000 }
+              `}</style>
+              <div className="thermal-wrap">
+                <div className="center">
                   {receipt.shopDetails.logoUrl && (
-                    <div className="mb-3" style={{ maxWidth: '150px', margin: '0 auto' }}>
-                      <img 
-                        src={receipt.shopDetails.logoUrl} 
-                        alt={receipt.shopDetails.name} 
-                        style={{ maxWidth: '100%', maxHeight: '100px' }}
-                        crossOrigin="anonymous"
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          console.log('Logo failed to load');
-                          // Set a fallback or just hide the image
-                          e.target.style.display = 'none';
-                        }}
-                      />
-                    </div>
+                    <img src={receipt.shopDetails.logoUrl} alt={receipt.shopDetails.name} className="logo" onError={(e)=>{e.target.style.display='none'}} />
                   )}
-                  <h3>{receipt.shopDetails.name}</h3>
-                  <p className="mb-0">{receipt.shopDetails.address}</p>
-                  <p>Tel: {receipt.shopDetails.phone}</p>
+                  <div className="title">{receipt.shopDetails.name}</div>
+                  <div className="sm">{receipt.shopDetails.address}</div>
+                  <div className="sm">Phone # {receipt.shopDetails.phone}</div>
                 </div>
-                
-                <Row className="mb-3">
-                  <Col xs={12} sm={6}>
-                    <p className="mb-1"><strong>Receipt #:</strong> {receipt.transactionId}</p>
-                    <p className="mb-1"><strong>Date:</strong> {formatDate(receipt.timestamp)}</p>
-                    <p className="mb-1"><strong>Time:</strong> {formatTime(receipt.timestamp)}</p>
-                  </Col>
-                  <Col xs={12} sm={6}>
-                    <p className="mb-1"><strong>Cashier:</strong> {receipt.cashierName}</p>
-                    <p className="mb-1"><strong>Manager:</strong> {receipt.managerName || 'N/A'}</p>
-                    <p className="mb-1"><strong>Payment Method:</strong> {receipt.paymentMethod}</p>
-                  </Col>
-                </Row>
-                
-                <hr />
-                
-                <div className="table-responsive">
-                  <Table borderless className="receipt-table">
-                    <thead>
-                      <tr>
-                        <th>Item</th>
-                        <th className="text-end">Price</th>
-                        <th className="text-center">Qty</th>
-                        <th className="text-end">Total</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {receipt.items.map((item, index) => (
-                        <tr key={index}>
-                          <td>{item.name}</td>
-                          <td className="text-end">{formatCurrency(item.price)}</td>
-                          <td className="text-center">
-                            {item.quantity} {item.quantityUnit === 'kg' ? 'KG' : ''}
-                          </td>
-                          <td className="text-end">{formatCurrency(parseFloat(item.price) * parseFloat(item.quantity))}</td>
+                <div className="sep"></div>
+                <div className="sm" style={{display:'flex',justifyContent:'space-between'}}>
+                  <div>Invoice: {receipt.transactionId}</div>
+                  <div>{formatDate(receipt.timestamp)} {formatTime(receipt.timestamp)}</div>
+                </div>
+                <div className="sep"></div>
+                <table className="thermal">
+                  <colgroup>
+                    <col style={{width:'10mm'}} />
+                    <col />
+                    <col style={{width:'12mm'}} />
+                    <col style={{width:'16mm'}} />
+                    <col style={{width:'16mm'}} />
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th className="c">Sr</th>
+                      <th className="c">Item / Product</th>
+                      <th className="c">Qty</th>
+                      <th className="r">Rate</th>
+                      <th className="r">Amnt</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {receipt.items.map((item, idx)=>{
+                      const qty = parseFloat(item.quantity||1);
+                      const rate = Math.round(parseFloat(item.price||0));
+                      const amt = Math.round(qty*rate);
+                      return (
+                        <tr key={idx}>
+                          <td className="c">{idx+1}</td>
+                          <td className="wrap">{item.name}</td>
+                          <td className="c">{qty} {item.quantityUnit==='kg'?'KG':''}</td>
+                          <td className="r">{rate}</td>
+                          <td className="r">{amt}</td>
                         </tr>
-                      ))}
-                    </tbody>
-                    <tfoot>
-                      {/* Calculate subtotal from items */}
-                      <tr>
-                        <th colSpan="3" className="text-start">Subtotal:</th>
-                        <th className="text-end">
-                          {formatCurrency(receipt.items.reduce((total, item) => 
-                            total + (parseFloat(item.price) * parseFloat(item.quantity)), 0))}
-                        </th>
-                      </tr>
-                      {/* Show discount if it exists */}
-                      {receipt.discount > 0 && (
-                        <tr>
-                          <th colSpan="3" className="text-start">Discount:</th>
-                          <th className="text-end">{formatCurrency(receipt.discount)}</th>
-                        </tr>
-                      )}
-                      <tr>
-                        <th colSpan="3" className="text-start">Total:</th>
-                        <th className="text-end">{formatCurrency(receipt.totalAmount)}</th>
-                      </tr>
-                      {/* Show return information if it exists */}
-                      {receipt.returnInfo && receipt.returnInfo.returnedItems && (
-                        <>
-                          <tr className="text-danger">
-                            <th colSpan="4" className="text-center pt-3">Return Information</th>
-                          </tr>
-                          <tr className="text-danger">
-                            <th colSpan="3" className="text-start">Return Amount:</th>
-                            <th className="text-end">-{formatCurrency(receipt.returnInfo.returnTotal)}</th>
-                          </tr>
-                          <tr>
-                            <th colSpan="3" className="text-start">Final Total:</th>
-                            <th className="text-end">{formatCurrency(parseFloat(receipt.totalAmount) - parseFloat(receipt.returnInfo.returnTotal))}</th>
-                          </tr>
-                        </>
-                      )}
-                    </tfoot>
-                  </Table>
+                      );
+                    })}
+                  </tbody>
+                </table>
+                <div className="totals">
+                  <div className="line"><span>Total</span><span>{receipt.items.reduce((s,i)=>s+parseFloat(i.quantity||0),0).toFixed(2)}</span></div>
+                  {receipt.discount>0 && (<div className="line"><span>Discount</span><span>{Math.round(parseFloat(receipt.discount))}</span></div>)}
+                  <div className="line"><span>Net Total</span><span>{Math.round(parseFloat(receipt.totalAmount))}</span></div>
                 </div>
-                
-                <hr />
-                
-                <div className="text-center mt-4">
-                  <p>Thank you for your business!</p>
-                  {receipt.shopDetails.receiptDescription && (
-                    <p className="mt-2">{receipt.shopDetails.receiptDescription}</p>
-                  )}
-                  <p className="small text-muted">Receipt ID: {receipt.id}</p>
-                </div>
+                <div className="net">{Math.round(parseFloat(receipt.totalAmount))}</div>
+                <div className="center sm" style={{marginTop:'8px'}}>Thank you For Shoping !</div>
+                {receipt.shopDetails.receiptDescription && (
+                  <div className="center sm" style={{marginTop:'4px'}}>{receipt.shopDetails.receiptDescription}</div>
+                )}
+                <div className="dev">software developed by SARMAD 03425050007</div>
               </div>
             </Card.Body>
           </Card>
