@@ -18,7 +18,7 @@ import { Translate, useTranslatedAttribute } from '../utils';
 import PageHeader from '../components/PageHeader';
 
 const MarkAttendance = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, activeShopId } = useAuth();
   const navigate = useNavigate();
   
   // Get translations for attributes
@@ -61,16 +61,14 @@ const MarkAttendance = () => {
   // Fetch employees
   useEffect(() => {
     const fetchEmployees = async () => {
-      if (!currentUser) {
-        setEmployees([]);
-        return;
-      }
+      if (!currentUser || !activeShopId) return;
       
       try {
+        setEmployees([]);
         const employeesRef = collection(db, 'employees');
         const employeesQuery = query(
           employeesRef,
-          where('shopId', '==', currentUser.uid)
+          where('shopId', '==', activeShopId)
         );
         
         const snapshot = await getDocs(employeesQuery);
@@ -88,7 +86,7 @@ const MarkAttendance = () => {
     };
     
     fetchEmployees();
-  }, [currentUser, getTranslatedAttr]);
+  }, [currentUser, activeShopId, getTranslatedAttr]);
   
   // Check for existing attendance records for this date
   useEffect(() => {
