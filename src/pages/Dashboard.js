@@ -340,28 +340,28 @@ const Dashboard = () => {
               ) : todaySales ? (
                 <>
                   <Col xs={6} md={3}>
-                    <div className="text-center p-3 rounded-3" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white'}}>
+                    <div className="text-center p-3 rounded-3 summary-box" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white'}}>
                       <i className="bi bi-currency-dollar fs-1 mb-2 d-block"></i>
                       <h6 className="mb-1 opacity-75">Sales</h6>
                       <h3 className="mb-0 fw-bold">{formatCurrency(todaySales.sales)}</h3>
                     </div>
                   </Col>
                   <Col xs={6} md={3}>
-                    <div className="text-center p-3 rounded-3" style={{background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', color: 'white', minHeight: '140px'}}>
+                    <div className="text-center p-3 rounded-3 summary-box" style={{background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', color: 'white'}}>
                       <i className="bi bi-trending-up fs-1 mb-2 d-block"></i>
                       <h6 className="mb-1 opacity-75">Profit</h6>
                       <h3 className="mb-0 fw-bold">{formatCurrency(todaySales.profit)}</h3>
                     </div>
                   </Col>
                   <Col xs={6} md={3}>
-                    <div className="text-center p-3 rounded-3" style={{background: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', color: 'white'}}>
+                    <div className="text-center p-3 rounded-3 summary-box" style={{background: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', color: 'white'}}>
                       <i className="bi bi-receipt fs-1 mb-2 d-block"></i>
                       <h6 className="mb-1 opacity-75">Transactions</h6>
                       <h3 className="mb-0 fw-bold">{todaySales.transactionCount}</h3>
                     </div>
                   </Col>
                   <Col xs={6} md={3}>
-                    <div className="text-center p-3 rounded-3" style={{background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', color: 'white'}}>
+                    <div className="text-center p-3 rounded-3 summary-box" style={{background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', color: 'white'}}>
                       <i className="bi bi-percent fs-1 mb-2 d-block"></i>
                       <h6 className="mb-1 opacity-75">Profit Margin</h6>
                       <h3 className="mb-0 fw-bold">
@@ -661,6 +661,7 @@ const Dashboard = () => {
             padding: 0.3rem;
           }
         }
+        .summary-box { height: 180px; display: flex; flex-direction: column; justify-content: center; }
       `}</style>
     </>
   );
