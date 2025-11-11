@@ -10,7 +10,7 @@ import PageHeader from '../components/PageHeader';
 import { Translate, useTranslatedAttribute } from '../utils';
 
 const QRScanner = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, activeShopId } = useAuth();
   const navigate = useNavigate();
   const scannerRef = useRef(null);
   const html5QrCodeRef = useRef(null);
@@ -95,7 +95,7 @@ const QRScanner = () => {
       const employeesRef = collection(db, 'employees');
       const employeesQuery = query(
         employeesRef,
-        where('shopId', '==', currentUser.uid),
+        where('shopId', '==', activeShopId),
         where('qrCodeId', '==', qrCodeId)
       );
 
