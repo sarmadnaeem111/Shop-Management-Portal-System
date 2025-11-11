@@ -8,7 +8,7 @@ import { addExpense, getExpenseCategories, addExpenseCategory } from '../utils/e
 import PageHeader from '../components/PageHeader';
 
 const AddExpense = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, activeShopId } = useAuth();
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
@@ -34,13 +34,13 @@ const AddExpense = () => {
   // Fetch expense categories
   useEffect(() => {
     const fetchCategories = async () => {
-      if (!currentUser) return;
+      if (!currentUser || !activeShopId) return;
       
       setLoading(true);
       setError('');
       
       try {
-        const categoriesData = await getExpenseCategories(currentUser.uid);
+        const categoriesData = await getExpenseCategories(activeShopId);
         setCategories(categoriesData);
       } catch (error) {
         console.error('Error fetching expense categories:', error);
@@ -51,7 +51,7 @@ const AddExpense = () => {
     };
     
     fetchCategories();
-  }, [currentUser]);
+  }, [currentUser, activeShopId]);
   
   // Handle form input changes
   const handleChange = (e) => {
@@ -75,7 +75,7 @@ const AddExpense = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!currentUser) return;
+    if (!currentUser || !activeShopId) return;
     
     // Validate form
     if (!formData.description.trim()) {
@@ -101,7 +101,7 @@ const AddExpense = () => {
       const expenseData = {
         ...formData,
         amount: parseFloat(formData.amount),
-        shopId: currentUser.uid,
+        shopId: activeShopId,
         timestamp: new Date().toISOString()
       };
       
@@ -137,7 +137,7 @@ const AddExpense = () => {
   const handleAddCategory = async (e) => {
     e.preventDefault();
     
-    if (!currentUser) return;
+    if (!currentUser || !activeShopId) return;
     
     // Validate category name
     if (!newCategory.name.trim()) {
@@ -152,7 +152,7 @@ const AddExpense = () => {
       // Prepare category data
       const categoryData = {
         ...newCategory,
-        shopId: currentUser.uid,
+        shopId: activeShopId,
         timestamp: new Date().toISOString()
       };
       
