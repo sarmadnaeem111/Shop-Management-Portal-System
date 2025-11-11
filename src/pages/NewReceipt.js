@@ -472,10 +472,12 @@ const NewReceipt = () => {
               border-top: 1px dashed #000;
               border-bottom: 1px dashed #000;
             }
-            col.sr { width: 10mm; }
-            col.qty { width: 12mm; }
-            col.rate { width: 16mm; }
-            col.amnt { width: 16mm; }
+            /* Percentage widths for better layout on thermal printers */
+            col.sr { width: 12%; }
+            col.item { width: 46%; }
+            col.qty { width: 10%; }
+            col.rate { width: 16%; }
+            col.amnt { width: 16%; }
           </style>
         </head>
         <body>
@@ -496,7 +498,7 @@ const NewReceipt = () => {
           <table class="receipt">
             <colgroup>
               <col class="sr" />
-              <col />
+              <col class="item" />
               <col class="qty" />
               <col class="rate" />
               <col class="amnt" />
