@@ -336,7 +336,7 @@ const ViewReceipt = () => {
           <Card>
             <Card.Body ref={pdfRef} className="p-4">
               <style>{`
-                .thermal-wrap{max-width:80mm;margin:0 auto;color:#000;font-family:'Courier New',monospace}
+                .thermal-wrap{max-width:80mm;margin:0 auto;color:#000;font-family:'Courier New',monospace;font-weight:700}
                 .center{text-align:center}
                 .logo{max-height:36px;margin:6px auto 8px;display:block}
                 .title{font-size:20px;font-weight:700;margin:4px 0}
