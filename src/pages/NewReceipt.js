@@ -15,7 +15,7 @@ import '../styles/pos-desktop.css';
 import '../styles/select.css';
 
 const NewReceipt = () => {
-  const { currentUser, shopData } = useAuth();
+  const { currentUser, shopData, activeShopId } = useAuth();
   const [items, setItems] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState('');
   const [productCode, setProductCode] = useState('');
@@ -41,8 +41,8 @@ const NewReceipt = () => {
 
   // Fetch stock items
   useEffect(() => {
-    if (currentUser) {
-      getShopStock(currentUser.uid)
+    if (currentUser && activeShopId) {
+      getShopStock(activeShopId)
         .then(items => {
           setStockItems(items);
           setStockLoaded(true);
@@ -51,7 +51,7 @@ const NewReceipt = () => {
           console.error('Error loading inventory items:', error);
         });
     }
-  }, [currentUser]);
+  }, [currentUser, activeShopId]);
 
   // Fetch employees
   useEffect(() => {
@@ -340,7 +340,7 @@ const NewReceipt = () => {
       }));
       
     const receiptData = {
-      shopId: currentUser.uid,
+      shopId: activeShopId,
       shopDetails: {
         name: shopData.shopName,
         address: shopData.address,
@@ -366,7 +366,7 @@ const NewReceipt = () => {
       const receiptId = await saveReceipt(receiptData);
       
       // Update stock
-      await updateStockQuantity(currentUser.uid, receiptItems.map(item => ({
+      await updateStockQuantity(activeShopId, receiptItems.map(item => ({
           name: item.name,
         quantity: item.quantity,
         quantityUnit: item.quantityUnit
