@@ -7,7 +7,7 @@ import { Translate } from '../utils';
 import { getExpenseById, updateExpense, getExpenseCategories } from '../utils/expenseUtils';
 
 const EditExpense = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, activeShopId } = useAuth();
   const navigate = useNavigate();
   const { id } = useParams();
   
@@ -30,21 +30,21 @@ const EditExpense = () => {
   // Fetch expense data and categories
   useEffect(() => {
     const fetchData = async () => {
-      if (!currentUser || !id) return;
+      if (!currentUser || !id || !activeShopId) return;
       
       setLoading(true);
       setError('');
       
       try {
         // Fetch expense categories
-        const categoriesData = await getExpenseCategories(currentUser.uid);
+        const categoriesData = await getExpenseCategories(activeShopId);
         setCategories(categoriesData);
         
         // Fetch expense data
         const expenseData = await getExpenseById(id);
         
         // Verify that this expense belongs to the current shop
-        if (expenseData.shopId !== currentUser.uid) {
+        if (expenseData.shopId !== activeShopId) {
           throw new Error('You do not have permission to edit this expense');
         }
         
@@ -61,7 +61,7 @@ const EditExpense = () => {
     };
     
     fetchData();
-  }, [currentUser, id]);
+  }, [currentUser, id, activeShopId]);
   
   // Handle form input changes
   const handleChange = (e) => {
@@ -76,7 +76,7 @@ const EditExpense = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!currentUser || !id) return;
+    if (!currentUser || !id || !activeShopId) return;
     
     // Validate form
     if (!formData.description.trim()) {
@@ -102,7 +102,7 @@ const EditExpense = () => {
       const expenseData = {
         ...formData,
         amount: parseFloat(formData.amount),
-        shopId: currentUser.uid
+        shopId: activeShopId
       };
       
       // Update expense in database
