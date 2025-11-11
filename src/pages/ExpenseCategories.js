@@ -8,7 +8,7 @@ import { Translate } from '../utils';
 import { getExpenseCategories, addExpenseCategory, updateExpenseCategory, deleteExpenseCategory } from '../utils/expenseUtils';
 
 const ExpenseCategories = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, activeShopId } = useAuth();
   const navigate = useNavigate();
   
   const [categories, setCategories] = useState([]);
@@ -34,13 +34,13 @@ const ExpenseCategories = () => {
   // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
-      if (!currentUser) return;
+      if (!currentUser || !activeShopId) return;
       
       setLoading(true);
       setError('');
       
       try {
-        const categoriesData = await getExpenseCategories(currentUser.uid);
+        const categoriesData = await getExpenseCategories(activeShopId);
         setCategories(categoriesData);
       } catch (error) {
         console.error('Error fetching expense categories:', error);
@@ -51,7 +51,7 @@ const ExpenseCategories = () => {
     };
     
     fetchCategories();
-  }, [currentUser]);
+  }, [currentUser, activeShopId]);
   
   // Handle new category form changes
   const handleNewCategoryChange = (e) => {
@@ -75,7 +75,7 @@ const ExpenseCategories = () => {
   const handleAddCategory = async (e) => {
     e.preventDefault();
     
-    if (!currentUser) return;
+    if (!currentUser || !activeShopId) return;
     
     // Validate category name
     if (!newCategory.name.trim()) {
@@ -90,7 +90,7 @@ const ExpenseCategories = () => {
       // Prepare category data
       const categoryData = {
         ...newCategory,
-        shopId: currentUser.uid,
+        shopId: activeShopId,
         timestamp: new Date().toISOString()
       };
       
@@ -120,7 +120,7 @@ const ExpenseCategories = () => {
   const handleUpdateCategory = async (e) => {
     e.preventDefault();
     
-    if (!currentUser || !editCategory.id) return;
+    if (!currentUser || !activeShopId || !editCategory.id) return;
     
     // Validate category name
     if (!editCategory.name.trim()) {
