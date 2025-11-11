@@ -311,6 +311,12 @@ const NewReceipt = () => {
     setProductCode('');
   };
 
+  // Remove item from the items list
+  const removeItemFromList = (index) => {
+    const updated = items.filter((_, i) => i !== index);
+    setItems(updated);
+  };
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -737,7 +743,18 @@ const NewReceipt = () => {
                       onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
                     />
                     <div className="pos-table-cell-text" style={{fontWeight: 'bold'}}>
-                      {item.total}
+                      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '8px' }}>
+                        <span>{item.total}</span>
+                        <button
+                          type="button"
+                          title="Remove"
+                          onClick={() => removeItemFromList(index)}
+                          className="pos-btn-action"
+                          style={{ padding: '4px 8px' }}
+                        >
+                          <i className="bi bi-trash" style={{ color: '#dc3545' }}></i>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))
