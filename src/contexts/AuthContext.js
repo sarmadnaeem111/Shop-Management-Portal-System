@@ -347,6 +347,11 @@ export function AuthProvider({ children }) {
     return unsubscribe;
   }, []);
 
+  // Compute the active shop id (owner's uid or parent id for staff)
+  const activeShopId = isStaff && staffData && staffData.shopId
+    ? staffData.shopId
+    : (currentUser ? currentUser.uid : null);
+
   // Change password with policy enforcement
   function changePassword(newPassword) {
     if (!currentUser) return Promise.reject(new Error('No user logged in'));
@@ -406,6 +411,7 @@ export function AuthProvider({ children }) {
     loading,
     isGuest,
     isStaff,
+    activeShopId,
     registerShop,
     login,
     logout,
