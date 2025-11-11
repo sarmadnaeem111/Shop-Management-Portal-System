@@ -10,7 +10,7 @@ import "./Attendance.css";  // Import the CSS file for responsive styles
 import { Translate, useTranslatedAttribute } from '../utils';
 
 const Attendance = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, activeShopId } = useAuth();
   const navigate = useNavigate();
   
   // Get translations for attributes
@@ -27,16 +27,14 @@ const Attendance = () => {
   
   useEffect(() => {
     const fetchEmployees = async () => {
-      if (!currentUser) {
-        setEmployees([]);
-        return;
-      }
+      if (!currentUser || !activeShopId) return;
       
       try {
+        setEmployees([]);
         const employeesRef = collection(db, 'employees');
         const employeesQuery = query(
           employeesRef,
-          where('shopId', '==', currentUser.uid)
+          where('shopId', '==', activeShopId)
         );
         
         const snapshot = await getDocs(employeesQuery);
@@ -54,7 +52,7 @@ const Attendance = () => {
     };
     
     fetchEmployees();
-  }, [currentUser, getTranslatedAttr]);
+  }, [currentUser, activeShopId, getTranslatedAttr]);
   
   useEffect(() => {
     const fetchAttendance = async () => {
