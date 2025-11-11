@@ -102,7 +102,7 @@ const ProductSalesRow = React.memo(({ product }) => {
 });
 
 const SalesAnalytics = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, activeShopId } = useAuth();
   const [viewMode, setViewMode] = useState('daily'); // 'daily', 'monthly', 'yearly'
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [analytics, setAnalytics] = useState(null);
@@ -134,16 +134,16 @@ const SalesAnalytics = () => {
       
       switch (viewMode) {
         case 'daily':
-          data = await getDailySalesAndProfit(currentUser.uid, date);
+          data = await getDailySalesAndProfit(activeShopId, date);
           break;
         case 'monthly':
-          data = await getMonthlySalesAndProfit(currentUser.uid, date);
+          data = await getMonthlySalesAndProfit(activeShopId, date);
           break;
         case 'yearly':
-          data = await getYearlySalesAndProfit(currentUser.uid, date);
+          data = await getYearlySalesAndProfit(activeShopId, date);
           break;
         default:
-          data = await getDailySalesAndProfit(currentUser.uid, date);
+          data = await getDailySalesAndProfit(activeShopId, date);
       }
       
       setAnalytics(data);
@@ -157,7 +157,7 @@ const SalesAnalytics = () => {
       setLoading(false);
       setIsInitialLoad(false);
     }
-  }, [currentUser, viewMode, selectedDate]);
+  }, [currentUser, activeShopId, viewMode, selectedDate]);
 
   useEffect(() => {
     fetchAnalyticsData();
@@ -668,7 +668,7 @@ const SalesAnalytics = () => {
         </Card>
       </>
     );
-  }, [analytics, profitMargin, generateEmployeeSummary, generateCSVReport, generatePDFReport]);
+  }, [analytics, profitMargin, generateEmployeeSummary]);
 
   // Render detailed data based on view mode - memoized to prevent unnecessary recalculations
   const renderDetailedData = useMemo(() => {
