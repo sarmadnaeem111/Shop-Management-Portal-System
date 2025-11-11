@@ -192,12 +192,12 @@ const ViewStock = () => {
                 min-height: 100vh;
               }
               .barcode-container {
-                border: 2px solid #000;
+                border: none;
                 padding: 20px;
                 margin: 20px auto;
                 max-width: 400px;
                 background: white;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                box-shadow: none;
               }
               .barcode { 
                 width: 100%;
@@ -232,7 +232,7 @@ const ViewStock = () => {
                 }
                 .barcode-container {
                   box-shadow: none;
-                  border: 2px solid #000;
+                  border: none;
                 }
               }
             </style>
@@ -309,20 +309,12 @@ const ViewStock = () => {
       <Container>
         <div className="d-flex justify-content-between align-items-center mb-4">
           <PageHeader title="Stock Inventory" icon="bi-box-seam" color="primary" />
-          <div className="d-flex gap-2">
-            <Button 
-              variant="outline-primary" 
-              onClick={() => navigate('/add-stock-entry')}
-            >
-              Add Stock
-            </Button>
-            <Button 
-              variant="success" 
-              onClick={() => navigate('/add-stock')}
-            >
-              <Translate textKey="addNewItem" />
-            </Button>
-          </div>
+          <Button 
+            variant="success" 
+            onClick={() => navigate('/add-stock')}
+          >
+            <Translate textKey="addNewItem" />
+          </Button>
         </div>
         
         <Card className="mb-4">
@@ -448,14 +440,6 @@ const ViewStock = () => {
                               <Translate textKey="edit" />
                             </Button>
                             <Button 
-                              variant="outline-success" 
-                              size="sm"
-                              onClick={() => navigate('/add-stock-entry', { state: { preselectId: item.id } })}
-                              className="me-1 mb-1"
-                            >
-                              Add Stock
-                            </Button>
-                            <Button 
                               variant="outline-secondary" 
                               size="sm"
                               onClick={() => printBarcode(item)}
@@ -547,7 +531,7 @@ const ViewStock = () => {
               margin: '0',
               background: 'white',
               width: '300px',
-              border: '2px solid #000',
+              border: 'none',
               padding: '15px'
             }}>
               <div style={{
