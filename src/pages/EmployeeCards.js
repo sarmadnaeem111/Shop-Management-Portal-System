@@ -9,7 +9,7 @@ import { db } from '../firebase/config';
 import { useAuth } from '../contexts/AuthContext';
 
 const EmployeeCards = () => {
-  const { currentUser, shopData } = useAuth();
+  const { currentUser, activeShopId, staffData, isStaff, shopData } = useAuth();
   const navigate = useNavigate();
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,12 +19,14 @@ const EmployeeCards = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       if (!currentUser) return;
+      const shopIdToUse = activeShopId || (isStaff && staffData && staffData.shopId) || currentUser.uid;
+      if (!shopIdToUse) return;
       try {
         setLoading(true);
         const employeesRef = collection(db, 'employees');
         const employeesQuery = query(
           employeesRef,
-          where('shopId', '==', currentUser.uid)
+          where('shopId', '==', shopIdToUse)
         );
         const snapshot = await getDocs(employeesQuery);
         const list = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -36,7 +38,7 @@ const EmployeeCards = () => {
       }
     };
     fetchEmployees();
-  }, [currentUser]);
+  }, [currentUser, activeShopId, isStaff, staffData]);
 
   const filteredEmployees = employees.filter(e =>
     (e.name || '').toLowerCase().includes(search.toLowerCase())
