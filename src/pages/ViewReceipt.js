@@ -352,6 +352,21 @@ const ViewReceipt = () => {
                 .line{display:flex;justify-content:space-between;margin:3px 0}
                 .net{ text-align:right;font-weight:700;font-size:18px;margin-top:6px }
                 .dev{ text-align:center;margin-top:10px;padding:6px 0;font-size:10px;border-top:1px dashed #000;border-bottom:1px dashed #000 }
+                /* Percentage widths to increase the Item/Product column */
+                .col-sr { width: 12%; }
+                .col-item { width: 46%; }
+                .col-qty { width: 10%; }
+                .col-rate { width: 16%; }
+                .col-amnt { width: 16%; }
+                .totals-box { border: 1px dashed #000; padding: 5px; margin-top: 5mm; }
+                .total-row { display: flex; justify-content: space-between; padding: 2px 0; }
+                .net-total { font-size: 16px; font-weight: 700; text-align: right; margin-top: 3mm; }
+                .thank-you { margin-top: 5mm; font-size: 10px; }
+                .dev { text-align: center; margin-top: 10px; padding: 6px 0; font-size: 10px; border-top: 1px dashed #000; border-bottom: 1px dashed #000; }
+                @media print {
+                  body { font-weight: 700; }
+                  .thermal-wrap { width: 80mm; }
+                }
               `}</style>
               <div className="thermal-wrap">
                 <div className="center">
