@@ -206,17 +206,6 @@ const ViewStock = () => {
                 margin: 15px 0;
                 display: block;
               }
-              .item-name { 
-                font-weight: bold; 
-                margin-bottom: 8px; 
-                font-size: 16px;
-                text-transform: uppercase;
-              }
-              .item-price { 
-                color: #666; 
-                margin-bottom: 12px; 
-                font-size: 14px;
-              }
               .print-info {
                 font-size: 10px;
                 color: #888;
@@ -239,8 +228,6 @@ const ViewStock = () => {
           </head>
           <body>
             <div class="barcode-container">
-              <div class="item-name">${itemToPrintBarcode.name}</div>
-              <div class="item-price">RS${parseFloat(itemToPrintBarcode.price).toFixed(2)}</div>
               <img src="${barcodeImage}" alt="Barcode" class="barcode" />
             </div>
             <div class="print-info">Press Ctrl+P to print this barcode</div>
@@ -534,20 +521,6 @@ const ViewStock = () => {
               border: 'none',
               padding: '15px'
             }}>
-              <div style={{
-                fontWeight: 'bold',
-                marginBottom: '8px',
-                fontSize: '16px'
-              }}>
-                {printBarcodeData.name}
-              </div>
-              <div style={{
-                color: '#666',
-                marginBottom: '12px',
-                fontSize: '14px'
-              }}>
-                RS{printBarcodeData.price}
-              </div>
               <div style={{
                 fontSize: '14px',
                 lineHeight: '1.2',
