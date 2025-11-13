@@ -166,6 +166,8 @@ const translations = {
 
     // Stock inventory page
     addNewItem: "Add New Item",
+    stockIn: "Add Stock Quantities",
+    addQuantity: "Add Quantity",
     searchItems: "Search Items",
     searchItemsPlaceholder: "Search by name, description...",
     filterByCategory: "Filter by Category",
@@ -436,7 +438,12 @@ const translations = {
     adminPanel: "ایڈمن پینل",
     pendingApprovals: "زیر التواء منظوریاں",
     manageUsers: "صارفین کا انتظام کریں",
-    menu: "مینو"
+    menu: "مینو",
+
+    // Stock inventory page
+    addNewItem: "نیا آئٹم شامل کریں",
+    stockIn: "اسٹاک شامل کریں",
+    addQuantity: "مقدار شامل کریں"
   }
 };
 
