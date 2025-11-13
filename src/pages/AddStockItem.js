@@ -3,6 +3,7 @@ import { Container, Form, Button, Row, Col, Card, Alert } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import MainNavbar from '../components/Navbar';
+import PageHeader from '../components/PageHeader';
 import { addStockItem as addStockItemToFirestore } from '../utils/stockUtils';
 
 const AddStockItem = () => {
@@ -82,9 +83,30 @@ const AddStockItem = () => {
   return (
     <>
       <MainNavbar />
-      <Container>
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <h2>Add New Stock Item</h2>
+      <Container className="pos-content">
+        <PageHeader
+          title="Add New Stock Item"
+          icon="bi-bag-plus"
+          subtitle="Register fresh inventory, set pricing, and keep your catalog up to date."
+        >
+          <div className="hero-metrics__item">
+            <span className="hero-metrics__label">Default Unit</span>
+            <span className="hero-metrics__value">{quantityUnit.toUpperCase()}</span>
+          </div>
+          <div className="hero-metrics__item">
+            <span className="hero-metrics__label">Cost Price</span>
+            <span className="hero-metrics__value">{costPrice ? `RS ${costPrice}` : '—'}</span>
+          </div>
+          <div className="hero-metrics__item">
+            <span className="hero-metrics__label">Selling Price</span>
+            <span className="hero-metrics__value">{price ? `RS ${price}` : '—'}</span>
+          </div>
+          <div className="hero-metrics__item">
+            <span className="hero-metrics__label">Quantity</span>
+            <span className="hero-metrics__value">{quantity || '0'}</span>
+          </div>
+        </PageHeader>
+        <div className="page-header-actions">
           <Button 
             variant="outline-secondary" 
             onClick={() => navigate('/stock')}
