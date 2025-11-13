@@ -236,4 +236,3 @@ const AddStockEntry = () => {
 
 export default AddStockEntry;
 
-
