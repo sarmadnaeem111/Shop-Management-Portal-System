@@ -294,8 +294,12 @@ const ViewStock = () => {
       
       <MainNavbar />
       <Container>
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <PageHeader title="Stock Inventory" icon="bi-box-seam" color="primary" />
+        <PageHeader 
+          title="Stock Inventory" 
+          icon="bi-box-seam"
+          subtitle="Monitor stock levels, add incoming quantities and keep products ready to sell."
+        />
+        <div className="page-header-actions">
           <div className="d-flex flex-wrap gap-2">
             <Button
               variant="primary"
