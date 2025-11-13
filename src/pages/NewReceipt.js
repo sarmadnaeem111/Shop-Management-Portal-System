@@ -1,17 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Container, Row, Col, Card, Form, Button, Table, InputGroup, Badge, Alert } from 'react-bootstrap';
 import BarcodeReader from 'react-barcode-reader';
 import Select from 'react-select';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useAuth } from '../contexts/AuthContext';
-import { calculateTotal, generateTransactionId, saveReceipt } from '../utils/receiptUtils';
+import { calculateTotal, generateTransactionId, saveReceipt, formatCurrency } from '../utils/receiptUtils';
 import { getShopStock, updateStockQuantity } from '../utils/stockUtils';
 import { Translate, useTranslatedData } from '../utils';
 import MainNavbar from '../components/Navbar';
+import PageHeader from '../components/PageHeader';
 import { db } from '../firebase/config';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import '../styles/pos-desktop.css';
 import '../styles/select.css';
 
 const NewReceipt = () => {
@@ -553,337 +554,351 @@ const NewReceipt = () => {
   return (
     <>
       <MainNavbar />
-      <div className="pos-desktop-container">
-      {/* Left Sidebar */}
-      <div className="pos-sidebar">
-        <div className="pos-sidebar-icon" onClick={() => navigate(-1)}>
-          <i className="bi bi-arrow-left"></i>
-        </div>
-        <div className="pos-sidebar-icon" onClick={() => navigate('/dashboard')}>
-          <i className="bi bi-house"></i>
-        </div>
-        <div className="pos-sidebar-text">KEY-POS</div>
-      </div>
-      
-      {/* Main Content */}
-      <div className="pos-main-content">
-        {/* Top Header */}
-        <div className="pos-top-header">
-          <div className="pos-header-left">
-            <span>localhost</span>
-            <span className="pos-header-title">Sale Invoice: KEY-POS</span>
-            </div>
-          <div className="pos-header-center">
-            {shopData?.shopName?.toUpperCase() || 'SHOP NAME'}
+      <Container fluid className="pos-content">
+        <PageHeader
+          title="New Receipt"
+          icon="bi-receipt"
+          subtitle={`Create a new sale invoice. Transaction ID: ${transactionId}`}
+        >
+          <div className="hero-metrics__item">
+            <span className="hero-metrics__label">Items</span>
+            <span className="hero-metrics__value">{items.length}</span>
           </div>
-          <div className="pos-header-right">
-            <i className="bi bi-person"></i>
+          <div className="hero-metrics__item">
+            <span className="hero-metrics__label">Total</span>
+            <span className="hero-metrics__value">{formatCurrency(totals.totalAmount)}</span>
           </div>
-        </div>
-        
-        {/* Invoice Content */}
-        <div className="pos-invoice-wrapper">
-          <h1 className="pos-invoice-title">Sale Invoice</h1>
-          
-          {/* Top Controls */}
-          <div className="pos-top-controls-row">
-            <div>
-              <label className="pos-input-label">Product (alt+p)</label>
-              <Select
-                value={productOptions.find(opt => opt.value === selectedProduct)}
-                onChange={handleProductSelect}
-                options={productOptions}
-                placeholder="Select Product"
-                className="basic-single"
-                classNamePrefix="select"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && selectedProduct) {
-                    e.preventDefault();
-                    addItemToList();
-                  }
-                }}
-              />
-            </div>
-            
-            <div>
-              <label className="pos-input-label">Code (alt+c)</label>
-              <input
-                            type="text"
-                className="pos-input-field"
-                placeholder="Product Code"
-                value={productCode}
-                onChange={handleCodeInput}
-              />
-            </div>
-            
-            <div>
-              <label className="pos-input-label">Customer</label>
-              <input
-                            type="text"
-                className="pos-input-field"
-                value={customer}
-                onChange={(e) => setCustomer(e.target.value)}
-              />
-            </div>
-            
-            <div>
-              <label className="pos-input-label">Employee (Optional)</label>
-              <Select
-                value={selectedEmployee ? employeeOptions.find(opt => opt.value === selectedEmployee.id) : null}
-                onChange={(option) => setSelectedEmployee(option ? employees.find(emp => emp.id === option.value) : null)}
-                options={employeeOptions}
-                placeholder="Select Employee"
-                isClearable
-                className="basic-single"
-                classNamePrefix="select"
-              />
-            </div>
+          <div className="hero-metrics__item">
+            <span className="hero-metrics__label">Payable</span>
+            <span className="hero-metrics__value">{formatCurrency(totals.payable)}</span>
           </div>
-          
-          {/* Checkboxes */}
-          <div className="pos-checkboxes-row">
-            <div className="pos-checkbox-group">
-              <input
-                type="checkbox"
-                id="autoPrint"
-                checked={autoPrint}
-                onChange={(e) => setAutoPrint(e.target.checked)}
-              />
-              <label htmlFor="autoPrint">Auto Print</label>
-            </div>
-            
-            <div className="pos-checkbox-group">
-              <input
-                type="checkbox"
-                id="saleReturn"
-                checked={saleReturn}
-                onChange={(e) => setSaleReturn(e.target.checked)}
-              />
-              <label htmlFor="saleReturn">If Sale Return</label>
-            </div>
-            
-            <div className="pos-checkbox-group">
-              <input
-                type="checkbox"
-                id="wholesale"
-                checked={isWholesale}
-                onChange={(e) => setIsWholesale(e.target.checked)}
-              />
-              <label htmlFor="wholesale">If Wholesale</label>
-            </div>
+          <div className="hero-metrics__item">
+            <span className="hero-metrics__label">Balance</span>
+            <span className="hero-metrics__value">{formatCurrency(totals.balance)}</span>
           </div>
-          
-          {/* Action Buttons */}
-          <div className="pos-action-buttons">
-            <button 
-              type="button" 
-              className="pos-btn-action"
-              onClick={() => navigate('/receipts')}
-            >
-              Hold Invoices
-            </button>
-            <button 
-              type="button" 
-              className="pos-btn-action"
-              onClick={() => navigate('/receipts')}
-            >
-              Recent Invoices
-            </button>
-            <button 
-              type="button" 
-              className="pos-btn-action"
-              onClick={() => setSaleReturn(!saleReturn)}
-            >
-              Sale Return
-            </button>
-          </div>
-          
-          {/* Item Table */}
-          <div>
-            <div className="pos-table-header">
-              <div className="pos-table-header-cell">Sr #</div>
-              <div className="pos-table-header-cell">Code</div>
-              <div className="pos-table-header-cell">Name</div>
-              <div className="pos-table-header-cell">In Stock</div>
-              <div className="pos-table-header-cell">Sale Price</div>
-              <div className="pos-table-header-cell">Tax %</div>
-              <div className="pos-table-header-cell">Quantity</div>
-              <div className="pos-table-header-cell">Total!</div>
-            </div>
-            
-            <div className="pos-table-body">
-              {items.length === 0 ? (
-                <div className="pos-empty-state">
-                  <div className="pos-empty-state-icon">
-                    <i className="bi bi-receipt"></i>
-                  </div>
-                  <p>No items added yet</p>
+        </PageHeader>
+
+        {error && <Alert variant="danger" className="mb-3">{error}</Alert>}
+        {success && <Alert variant="success" className="mb-3">{success}</Alert>}
+
+        <Row className="g-4">
+          {/* Left Column - Product Selection & Cart */}
+          <Col lg={8}>
+            {/* Product Selection Card */}
+            <Card className="mb-4 pos-card">
+              <Card.Body>
+                <h5 className="mb-4 d-flex align-items-center gap-2">
+                  <i className="bi bi-cart-plus text-primary"></i>
+                  Add Products
+                </h5>
+                <Row className="g-3">
+                  <Col md={6}>
+                    <Form.Group>
+                      <Form.Label>Product</Form.Label>
+                      <Select
+                        value={productOptions.find(opt => opt.value === selectedProduct)}
+                        onChange={handleProductSelect}
+                        options={productOptions}
+                        placeholder="Search or select product..."
+                        className="basic-single"
+                        classNamePrefix="select"
+                        menuPortalTarget={document.body}
+                        styles={{
+                          menuPortal: (base) => ({ ...base, zIndex: 9999 })
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && selectedProduct) {
+                            e.preventDefault();
+                            addItemToList();
+                          }
+                        }}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group>
+                      <Form.Label>Barcode / SKU</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Scan or enter barcode"
+                        value={productCode}
+                        onChange={handleCodeInput}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && productCode) {
+                            e.preventDefault();
+                            addItemToList();
+                          }
+                        }}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group>
+                      <Form.Label>Customer Name</Form.Label>
+                      <Form.Control
+                        type="text"
+                        value={customer}
+                        onChange={(e) => setCustomer(e.target.value)}
+                        placeholder="Walk-in Customer"
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group>
+                      <Form.Label>Employee (Optional)</Form.Label>
+                      <Select
+                        value={selectedEmployee ? employeeOptions.find(opt => opt.value === selectedEmployee.id) : null}
+                        onChange={(option) => setSelectedEmployee(option ? employees.find(emp => emp.id === option.value) : null)}
+                        options={employeeOptions}
+                        placeholder="Select employee..."
+                        isClearable
+                        className="basic-single"
+                        classNamePrefix="select"
+                        menuPortalTarget={document.body}
+                        styles={{
+                          menuPortal: (base) => ({ ...base, zIndex: 9999 })
+                        }}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <div className="d-flex gap-2 mt-3 flex-wrap">
+                  <Form.Check
+                    type="checkbox"
+                    id="autoPrint"
+                    label="Auto Print"
+                    checked={autoPrint}
+                    onChange={(e) => setAutoPrint(e.target.checked)}
+                  />
+                  <Form.Check
+                    type="checkbox"
+                    id="saleReturn"
+                    label="Sale Return"
+                    checked={saleReturn}
+                    onChange={(e) => setSaleReturn(e.target.checked)}
+                  />
+                  <Form.Check
+                    type="checkbox"
+                    id="wholesale"
+                    label="Wholesale"
+                    checked={isWholesale}
+                    onChange={(e) => setIsWholesale(e.target.checked)}
+                  />
                 </div>
-              ) : (
-                items.map((item, index) => (
-                  <div key={index} className="pos-table-row">
-                    <div className="pos-table-cell-text">{index + 1}</div>
-                    <div className="pos-table-cell-text">{item.code}</div>
-                    <div className="pos-table-cell-text">{item.name}</div>
-                    <div className="pos-table-cell-text">{item.inStock}</div>
-                    <input
-                      type="number"
-                      className="pos-table-cell-input"
-                      value={item.salePrice}
-                      onChange={(e) => handleItemChange(index, 'salePrice', e.target.value)}
-                    />
-                    <input
-                      type="number"
-                      className="pos-table-cell-input"
-                      value={item.tax}
-                      onChange={(e) => handleItemChange(index, 'tax', e.target.value)}
-                    />
-                    <input
-                      type="number"
-                      className="pos-table-cell-input"
-                      value={item.quantity}
-                      onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
-                    />
-                    <div className="pos-table-cell-text" style={{fontWeight: 'bold'}}>
-                      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '8px' }}>
-                        <span>{item.total}</span>
-                        <button
-                          type="button"
-                          title="Remove"
-                          onClick={() => removeItemFromList(index)}
-                          className="pos-btn-action"
-                          style={{ padding: '4px 8px' }}
-                        >
-                          <i className="bi bi-trash" style={{ color: '#dc3545' }}></i>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-          
-          {/* Bottom Summary */}
-          <div className="pos-bottom-section">
-            <div className="pos-bottom-wrapper">
-              <div className="pos-summary-group">
-                <div className="pos-summary-item">
-                  <span className="pos-summary-label">Total Quantities</span>
-                  <span className="pos-summary-value">{totals.totalQuantities}</span>
+              </Card.Body>
+            </Card>
+
+            {/* Cart Items Card */}
+            <Card className="pos-card">
+              <Card.Body>
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <h5 className="mb-0 d-flex align-items-center gap-2">
+                    <i className="bi bi-cart-check text-primary"></i>
+                    Cart Items
+                  </h5>
+                  <Badge bg="primary" className="fs-6">{items.length} items</Badge>
                 </div>
-                
-                <div className="pos-summary-item">
-                  <span className="pos-summary-label">Discount (alt+d) % / Rs</span>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <input
+                {items.length === 0 ? (
+                  <div className="text-center py-5">
+                    <i className="bi bi-cart-x text-muted" style={{ fontSize: '3rem' }}></i>
+                    <p className="text-muted mt-3">No items in cart. Add products to get started.</p>
+                  </div>
+                ) : (
+                  <div className="table-responsive">
+                    <Table hover className="mb-0">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Product</th>
+                          <th>Stock</th>
+                          <th>Price</th>
+                          <th>Qty</th>
+                          <th>Total</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {items.map((item, index) => (
+                          <tr key={index}>
+                            <td>{index + 1}</td>
+                            <td>
+                              <div>
+                                <strong>{item.name}</strong>
+                                {item.code && <small className="text-muted d-block">{item.code}</small>}
+                              </div>
+                            </td>
+                            <td>
+                              <Badge bg={item.inStock > 0 ? 'success' : 'danger'}>
+                                {item.inStock}
+                              </Badge>
+                            </td>
+                            <td>
+                              <Form.Control
+                                type="number"
+                                size="sm"
+                                style={{ width: '100px' }}
+                                value={item.salePrice}
+                                onChange={(e) => handleItemChange(index, 'salePrice', e.target.value)}
+                              />
+                            </td>
+                            <td>
+                              <Form.Control
+                                type="number"
+                                size="sm"
+                                style={{ width: '80px' }}
+                                value={item.quantity}
+                                onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
+                                min="1"
+                              />
+                            </td>
+                            <td>
+                              <strong>{formatCurrency(item.total)}</strong>
+                            </td>
+                            <td>
+                              <Button
+                                variant="outline-danger"
+                                size="sm"
+                                onClick={() => removeItemFromList(index)}
+                              >
+                                <i className="bi bi-trash"></i>
+                              </Button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
+                  </div>
+                )}
+              </Card.Body>
+            </Card>
+          </Col>
+
+          {/* Right Column - Payment Summary */}
+          <Col lg={4}>
+            <Card className="pos-card sticky-top" style={{ top: '100px' }}>
+              <Card.Body>
+                <h5 className="mb-4 d-flex align-items-center gap-2">
+                  <i className="bi bi-cash-stack text-success"></i>
+                  Payment Summary
+                </h5>
+
+                <div className="mb-4">
+                  <Form.Group className="mb-3">
+                    <Form.Label>Discount (RS)</Form.Label>
+                    <Form.Control
                       type="number"
-                      className="pos-summary-input"
                       value={discount}
                       onChange={(e) => setDiscount(e.target.value)}
-                      placeholder="0"
+                      placeholder="0.00"
+                      min="0"
+                      step="0.01"
                     />
-                    <input
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Tax (RS)</Form.Label>
+                    <Form.Control
                       type="number"
-                      className="pos-summary-input"
-                      defaultValue="0"
-                      placeholder="0"
+                      value={tax}
+                      onChange={(e) => setTax(e.target.value)}
+                      placeholder="0.00"
+                      min="0"
+                      step="0.01"
                     />
+                  </Form.Group>
+                </div>
+
+                <div className="border-top pt-3 mb-3">
+                  <div className="d-flex justify-content-between mb-2">
+                    <span className="text-muted">Subtotal:</span>
+                    <strong>{formatCurrency(totals.totalAmount)}</strong>
+                  </div>
+                  <div className="d-flex justify-content-between mb-2">
+                    <span className="text-muted">Discount:</span>
+                    <span className="text-danger">-{formatCurrency(discount)}</span>
+                  </div>
+                  <div className="d-flex justify-content-between mb-2">
+                    <span className="text-muted">Tax:</span>
+                    <span>+{formatCurrency(tax)}</span>
+                  </div>
+                  <div className="d-flex justify-content-between mb-3 pt-2 border-top">
+                    <span className="fw-bold">Total Payable:</span>
+                    <strong className="text-primary fs-5">{formatCurrency(totals.payable)}</strong>
                   </div>
                 </div>
-                
-                <div className="pos-summary-item">
-                  <span className="pos-summary-label">Tax</span>
-                  <input
-                        type="number"
-                    className="pos-summary-input"
-                    value={tax}
-                    onChange={(e) => setTax(e.target.value)}
-                    placeholder="0"
-                  />
-                </div>
-              </div>
-              
-              <div className="pos-summary-group">
-                <div className="pos-summary-item">
-                  <span className="pos-summary-label">Total Amount</span>
-                  <div className="pos-amount-box">{totals.totalAmount}</div>
-                      </div>
-                
-                <div className="pos-summary-item">
-                  <span className="pos-summary-label">Payable</span>
-                  <div className="pos-amount-box">{totals.payable}</div>
-                        </div>
-                
-                <div className="pos-summary-item">
-                  <span className="pos-summary-label">Enter Amount (alt+e)</span>
-                  <input
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Amount Received</Form.Label>
+                  <Form.Control
                     type="number"
-                    className="pos-summary-input"
                     value={enterAmount}
                     onChange={(e) => setEnterAmount(e.target.value)}
-                    placeholder="0"
+                    placeholder="0.00"
+                    min="0"
+                    step="0.01"
+                    className="fs-5"
                   />
-                      </div>
-                      
-                <div className="pos-summary-item">
-                  <span className="pos-summary-label">Received Amount</span>
-                  <div className="pos-amount-box">{totals.receivedAmount}</div>
-                      </div>
-                
-                <div className="pos-summary-item">
-                  <span className="pos-summary-label">Balance</span>
-                  <div className="pos-amount-box">{totals.balance}</div>
+                </Form.Group>
+
+                <div className="border-top pt-3 mb-4">
+                  <div className="d-flex justify-content-between mb-2">
+                    <span className="text-muted">Received:</span>
+                    <strong>{formatCurrency(totals.receivedAmount)}</strong>
                   </div>
-                  
-                <div className="pos-summary-item">
-                  <span className="pos-summary-label">Return</span>
-                  <div className="pos-amount-box">{totals.return}</div>
+                  <div className="d-flex justify-content-between">
+                    <span className="fw-bold">Change:</span>
+                    <strong className={`fs-5 ${parseFloat(totals.balance) >= 0 ? 'text-success' : 'text-danger'}`}>
+                      {formatCurrency(totals.balance)}
+                    </strong>
+                  </div>
                 </div>
-              </div>
-                    </div>
-            
-            <div className="pos-customer-type">{customer}</div>
-            
-            {error && <div style={{ color: 'red', padding: '10px', textAlign: 'center', fontWeight: 'bold' }}>{error}</div>}
-            {success && <div style={{ color: 'green', padding: '10px', textAlign: 'center', fontWeight: 'bold' }}>{success}</div>}
-            
-            <div className="pos-bottom-actions">
-              <button
-                type="button"
-                className="pos-btn-large pos-btn-hold"
-                onClick={() => navigate('/receipts')}
-              >
-                Hold
-              </button>
-              
-              <button
-                type="button"
-                className="pos-btn-large pos-btn-save"
-                onClick={handleSubmit}
-                disabled={loading || items.length === 0}
-              >
-                Pay & Save
-              </button>
-              
-              <button
-                type="button"
-                className="pos-btn-large pos-btn-reset"
-                          onClick={resetForm}
-                        >
-                Reset
-              </button>
-            </div>
-                  </div>
-                      </div>
-                  </div>
-                  
+
+                <div className="d-grid gap-2">
+                  <Button
+                    variant="success"
+                    size="lg"
+                    onClick={handleSubmit}
+                    disabled={loading || items.length === 0}
+                    className="mb-2"
+                  >
+                    {loading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <i className="bi bi-check-circle me-2"></i>
+                        Pay & Save
+                      </>
+                    )}
+                  </Button>
+                  <Button
+                    variant="outline-secondary"
+                    onClick={resetForm}
+                    disabled={loading}
+                  >
+                    <i className="bi bi-arrow-clockwise me-2"></i>
+                    Reset
+                  </Button>
+                  <Button
+                    variant="outline-primary"
+                    onClick={() => navigate('/receipts')}
+                  >
+                    <i className="bi bi-list-ul me-2"></i>
+                    View Receipts
+                  </Button>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+
       {/* Barcode Reader */}
       <BarcodeReader
         onError={(err) => console.error('Scan error:', err)}
         onScan={handleScan}
       />
-                </div>
     </>
   );
 };
