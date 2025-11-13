@@ -130,23 +130,24 @@ const Attendance = () => {
     <>
       <MainNavbar />
       <Container>
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <PageHeader title="Attendance Records" icon="bi-calendar-check" color="primary" />
-          <div>
-            <Button 
-              variant="info" 
-              onClick={() => navigate('/qr-scanner')}
-              className="me-2"
-            >
-              Scan QR Code
-            </Button>
-            <Button 
-              variant="success" 
-              onClick={() => navigate('/mark-attendance')}
-            >
-              <Translate textKey="markAttendance" />
-            </Button>
-          </div>
+        <PageHeader 
+          title="Attendance Records" 
+          icon="bi-calendar-check" 
+          subtitle="Monitor daily attendance, review status, and keep your team on track."
+        />
+        <div className="page-header-actions">
+          <Button 
+            variant="outline-info" 
+            onClick={() => navigate('/qr-scanner')}
+          >
+            Scan QR Code
+          </Button>
+          <Button 
+            variant="success" 
+            onClick={() => navigate('/mark-attendance')}
+          >
+            <Translate textKey="markAttendance" />
+          </Button>
         </div>
         
         <div className="mb-4">
