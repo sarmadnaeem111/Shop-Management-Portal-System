@@ -41,6 +41,16 @@ const AddStockEntry = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location?.state, options.length]);
 
+  // Cleanup: Remove any print iframes when component unmounts
+  useEffect(() => {
+    return () => {
+      const existingIframe = document.getElementById('print-stock-iframe');
+      if (existingIframe && existingIframe.parentNode) {
+        existingIframe.parentNode.removeChild(existingIframe);
+      }
+    };
+  }, []);
+
   const setRowValue = (idx, key, value) => {
     setRows(prev => {
       const next = [...prev];
@@ -83,16 +93,32 @@ const AddStockEntry = () => {
 
   const printInvoice = (validRows) => {
     try {
-      const win = window.open('', '_blank');
+      // Remove any existing print iframe
+      const existingIframe = document.getElementById('print-stock-iframe');
+      if (existingIframe) {
+        existingIframe.remove();
+      }
+      
+      // Create a hidden iframe for printing
+      const iframe = document.createElement('iframe');
+      iframe.id = 'print-stock-iframe';
+      iframe.style.position = 'fixed';
+      iframe.style.right = '0';
+      iframe.style.bottom = '0';
+      iframe.style.width = '0';
+      iframe.style.height = '0';
+      iframe.style.border = '0';
+      document.body.appendChild(iframe);
+      
       const now = new Date();
       const bodyRows = (validRows || []).map(r => {
         const item = r.item ? stock.find(s => s.id === r.item.value) : null;
         return `
           <tr>
-            <td>${item?.name || '-'}</td>
-            <td style="text-align:right">${parseFloat(r.quantity).toFixed(2)}</td>
-            <td>${item?.quantityUnit || 'units'}</td>
-            <td style="text-align:right">${r.costPrice ? Number(r.costPrice).toFixed(2) : '-'}</td>
+            <td style="font-weight: 700 !important;">${item?.name || '-'}</td>
+            <td style="text-align:right; font-weight: 700 !important;">${parseFloat(r.quantity).toFixed(2)}</td>
+            <td style="font-weight: 700 !important;">${item?.quantityUnit || 'units'}</td>
+            <td style="text-align:right; font-weight: 700 !important;">${r.costPrice ? Number(r.costPrice).toFixed(2) : '-'}</td>
           </tr>
         `;
       }).join('');
@@ -101,43 +127,68 @@ const AddStockEntry = () => {
           <head>
             <title>Stock In - ${shopData?.shopName || 'Shop'}</title>
             <style>
-              body { font-family: Arial, sans-serif; padding: 20px; color: #111; }
-              h2 { margin: 0 0 10px 0; }
-              .meta { font-size: 12px; color: #555; margin-bottom: 20px; }
+              * { font-weight: 700 !important; }
+              body { font-family: Arial, sans-serif; padding: 20px; color: #111; font-weight: 700 !important; }
+              h2 { margin: 0 0 10px 0; font-weight: 700 !important; }
+              .meta { font-size: 12px; color: #555; margin-bottom: 20px; font-weight: 700 !important; }
+              .meta * { font-weight: 700 !important; }
+              .meta strong { font-weight: 700 !important; }
+              strong { font-weight: 700 !important; }
               .table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-              .table th, .table td { border: 1px solid #ccc; padding: 8px; font-size: 13px; }
-              .table th { background: #f3f4f6; text-align: left; }
-              .tot { margin-top: 15px; font-weight: bold; }
-              @media print { @page { size: A4; margin: 16mm; } }
+              .table th, .table td { border: 1px solid #ccc; padding: 8px; font-size: 13px; font-weight: 700 !important; }
+              .table th { background: #f3f4f6; text-align: left; font-weight: 700 !important; }
+              .tot { margin-top: 15px; font-weight: 700 !important; }
+              @media print { 
+                @page { size: A4; margin: 16mm; }
+                * { font-weight: 700 !important; }
+                .meta * { font-weight: 700 !important; }
+                strong { font-weight: 700 !important; }
+              }
             </style>
           </head>
           <body>
-            <h2>${shopData?.shopName || 'Shop'} - Stock In</h2>
-            <div class="meta">
-              Date: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}<br/>
-              Supplier: ${supplier || '-'}<br/>
-              Note: ${note || '-'}
+            <h2 style="font-weight: 700 !important;">${shopData?.shopName || 'Shop'} - Stock In</h2>
+            <div class="meta" style="font-weight: 700 !important;">
+              <strong style="font-weight: 700 !important;">Date: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}</strong><br/>
+              <strong style="font-weight: 700 !important;">Supplier: ${supplier || '-'}</strong><br/>
+              <strong style="font-weight: 700 !important;">Note: ${note || '-'}</strong>
             </div>
             <table class="table">
               <thead>
                 <tr>
-                  <th>Item</th>
-                  <th>Qty Added</th>
-                  <th>Unit</th>
-                  <th>Cost Price</th>
+                  <th style="font-weight: 700 !important;">Item</th>
+                  <th style="font-weight: 700 !important;">Qty Added</th>
+                  <th style="font-weight: 700 !important;">Unit</th>
+                  <th style="font-weight: 700 !important;">Cost Price</th>
                 </tr>
               </thead>
               <tbody>
                 ${bodyRows}
               </tbody>
             </table>
-            <div class="tot">Received by: ____________</div>
+            <div class="tot" style="font-weight: 700 !important;">Received by: ____________</div>
           </body>
         </html>
       `;
-      win.document.write(html);
-      win.document.close();
-      setTimeout(() => win.print(), 200);
+      
+      // Write content to iframe
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+      iframeDoc.open();
+      iframeDoc.write(html);
+      iframeDoc.close();
+      
+      // Print and remove iframe after printing
+      setTimeout(() => {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        
+        // Remove iframe after printing completes
+        setTimeout(() => {
+          if (iframe && iframe.parentNode) {
+            iframe.parentNode.removeChild(iframe);
+          }
+        }, 1000);
+      }, 200);
     } catch (e) {
       console.error('print error', e);
     }
