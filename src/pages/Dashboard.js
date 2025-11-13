@@ -5,6 +5,7 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useAuth } from '../contexts/AuthContext';
 import MainNavbar from '../components/Navbar';
+import PageHeader from '../components/PageHeader';
 import { Translate } from '../utils';
 import { formatCurrency } from '../utils/receiptUtils';
 import { getDailySalesAndProfit } from '../utils/salesUtils';
@@ -282,120 +283,207 @@ const Dashboard = () => {
   return (
     <>
       <MainNavbar />
-      <Container className="pb-4">
-        <div className="d-flex align-items-center mb-4">
-          <div className="me-3">
-            <div className="bg-primary rounded-circle d-flex align-items-center justify-content-center" style={{width: '60px', height: '60px'}}>
-              <i className="bi bi-speedometer2 text-white fs-3"></i>
+      <Container className="pos-content">
+        <PageHeader
+          title="Store Dashboard"
+          icon="bi-speedometer2"
+          subtitle={`Real-time monitoring and control for ${translatedShopData?.shopName || 'your store'}.`}
+        >
+          <div className="hero-metrics__item">
+            <span className="hero-metrics__label">Today's Sales</span>
+            <span className="hero-metrics__value">
+              {salesLoading ? '—' : todaySales ? formatCurrency(todaySales.sales) : formatCurrency(0)}
+            </span>
+          </div>
+          <div className="hero-metrics__item">
+            <span className="hero-metrics__label">Receipts</span>
+            <span className="hero-metrics__value">{receiptCount}</span>
+          </div>
+          <div className="hero-metrics__item">
+            <span className="hero-metrics__label">Team</span>
+            <span className="hero-metrics__value">{employeeCount}</span>
+          </div>
+          <div className="hero-metrics__item">
+            <span className="hero-metrics__label">Attendance</span>
+            <span className="hero-metrics__value">
+              {translatedAttendance.present}/{translatedAttendance.total}
+            </span>
+          </div>
+        </PageHeader>
+
+        <div className="dashboard-stats-grid">
+          <div className="dashboard-stat-card">
+            <div className="stat-chip">
+              <i className="bi bi-cash-stack"></i>
+              Today
+            </div>
+            <div className="dashboard-stat-card__label">Total Revenue</div>
+            <div className="dashboard-stat-card__value">
+              {salesLoading ? 'Loading…' : todaySales ? formatCurrency(todaySales.sales) : formatCurrency(0)}
+            </div>
+            <div className="dashboard-stat-card__trend">
+              <i className="bi bi-arrow-up-right"></i> Daily snapshot
             </div>
           </div>
-          <div>
-            <h2 className="mb-1 fw-bold text-primary">Dashboard</h2>
-            <p className="text-muted mb-0">Welcome back! Here's what's happening today.</p>
+          <div className="dashboard-stat-card">
+            <div className="stat-chip">
+              <i className="bi bi-receipt"></i>
+              Receipts
+            </div>
+            <div className="dashboard-stat-card__label">Total Receipts</div>
+            <div className="dashboard-stat-card__value">{receiptCount}</div>
+            <div className="dashboard-stat-card__trend">
+              <i className="bi bi-clock-history"></i> Last 24 hours
+            </div>
+          </div>
+          <div className="dashboard-stat-card">
+            <div className="stat-chip">
+              <i className="bi bi-people"></i>
+              Workforce
+            </div>
+            <div className="dashboard-stat-card__label">Active Employees</div>
+            <div className="dashboard-stat-card__value">{employeeCount}</div>
+            <div className="dashboard-stat-card__trend">
+              <i className="bi bi-person-check"></i> {translatedAttendance.present} present
+            </div>
+          </div>
+          <div className="dashboard-stat-card">
+            <div className="stat-chip">
+              <i className="bi bi-graph-up"></i>
+              Profit
+            </div>
+            <div className="dashboard-stat-card__label">Today's Profit</div>
+            <div className="dashboard-stat-card__value">
+              {salesLoading ? 'Loading…' : todaySales ? formatCurrency(todaySales.profit) : formatCurrency(0)}
+            </div>
+            <div className="dashboard-stat-card__trend">
+              {todaySales && todaySales.sales > 0 ? (
+                <>
+                  <i className="bi bi-activity"></i>{' '}
+                  {((todaySales.profit / todaySales.sales) * 100).toFixed(1)}% margin
+                </>
+              ) : (
+                <span className="dashboard-stat-card__trend danger">
+                  <i className="bi bi-exclamation-circle"></i> Awaiting sales
+                </span>
+              )}
+            </div>
           </div>
         </div>
-        
+
         {shopData && (
-          <Card className="mb-4 dashboard-card slide-in-up">
-            <Card.Header className="d-flex align-items-center">
-              <i className="bi bi-shop me-2"></i>
-              <span>{translatedShopData.shopName}</span>
-            </Card.Header>
+          <Card className="pos-card dashboard-section slide-in-up">
             <Card.Body>
-              <Row>
-                <Col md={6}>
-                  <div className="d-flex align-items-center mb-2">
-                    <i className="bi bi-geo-alt text-primary me-2"></i>
-                    <strong>Address:</strong>
+              <div className="pos-card__header">
+                <div>
+                  <h5 className="mb-1 d-flex align-items-center gap-2">
+                    <i className="bi bi-shop text-primary"></i>
+                    {translatedShopData.shopName}
+                  </h5>
+                  <p className="text-muted mb-0">Centralized overview for your store profile.</p>
+                </div>
+                <span className="pos-badge">Store Overview</span>
+              </div>
+              <Row className="g-4">
+                <Col md={4}>
+                  <div className="d-flex flex-column">
+                    <span className="text-uppercase text-muted fw-semibold small">Address</span>
+                    <span className="fw-semibold text-primary mt-1">{translatedShopData.address || 'Not set'}</span>
                   </div>
-                  <p className="ms-4 text-muted">{translatedShopData.address}</p>
                 </Col>
-                <Col md={6}>
-                  <div className="d-flex align-items-center mb-2">
-                    <i className="bi bi-telephone text-primary me-2"></i>
-                    <strong>Phone:</strong>
+                <Col md={4}>
+                  <div className="d-flex flex-column">
+                    <span className="text-uppercase text-muted fw-semibold small">Phone</span>
+                    <span className="fw-semibold text-primary mt-1">{translatedShopData.phoneNumber || '-'}</span>
                   </div>
-                  <p className="ms-4 text-muted">{translatedShopData.phoneNumber}</p>
+                </Col>
+                <Col md={4}>
+                  <div className="d-flex flex-column">
+                    <span className="text-uppercase text-muted fw-semibold small">Owner</span>
+                    <span className="fw-semibold text-primary mt-1">{currentUser?.email}</span>
+                  </div>
                 </Col>
               </Row>
             </Card.Body>
           </Card>
         )}
-        
-        {/* Today's sales and profit summary */}
-        <Card className="mb-4 dashboard-card slide-in-up">
-          <Card.Header className="d-flex align-items-center">
-            <i className="bi bi-graph-up me-2"></i>
-            <span>Today's Summary</span>
-          </Card.Header>
+
+        <Card className="pos-card dashboard-section slide-in-up">
           <Card.Body>
-            <Row className="g-4">
-              {salesLoading ? (
-                <Col xs={12} className="text-center py-4">
-                  <div className="d-flex flex-column align-items-center">
-                    <Spinner animation="border" size="lg" className="mb-3" />
-                    <p className="text-muted">Loading sales data...</p>
-                  </div>
-                </Col>
-              ) : todaySales ? (
-                <>
-                  <Col xs={6} md={3}>
-                    <div className="text-center p-3 rounded-3 summary-box" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white'}}>
-                      <i className="bi bi-currency-dollar fs-1 mb-2 d-block"></i>
-                      <h6 className="mb-1 opacity-75">Sales</h6>
-                      <h3 className="mb-0 fw-bold">{formatCurrency(todaySales.sales)}</h3>
-                    </div>
-                  </Col>
-                  <Col xs={6} md={3}>
-                    <div className="text-center p-3 rounded-3 summary-box" style={{background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', color: 'white'}}>
-                      <i className="bi bi-trending-up fs-1 mb-2 d-block"></i>
-                      <h6 className="mb-1 opacity-75">Profit</h6>
-                      <h3 className="mb-0 fw-bold">{formatCurrency(todaySales.profit)}</h3>
-                    </div>
-                  </Col>
-                  <Col xs={6} md={3}>
-                    <div className="text-center p-3 rounded-3 summary-box" style={{background: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', color: 'white'}}>
-                      <i className="bi bi-receipt fs-1 mb-2 d-block"></i>
-                      <h6 className="mb-1 opacity-75">Transactions</h6>
-                      <h3 className="mb-0 fw-bold">{todaySales.transactionCount}</h3>
-                    </div>
-                  </Col>
-                  <Col xs={6} md={3}>
-                    <div className="text-center p-3 rounded-3 summary-box" style={{background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', color: 'white'}}>
-                      <i className="bi bi-percent fs-1 mb-2 d-block"></i>
-                      <h6 className="mb-1 opacity-75">Profit Margin</h6>
-                      <h3 className="mb-0 fw-bold">
-                        {todaySales.sales > 0 
-                          ? `${((todaySales.profit / todaySales.sales) * 100).toFixed(2)}%` 
-                          : '0%'}
-                      </h3>
-                      <small className="opacity-75">
-                        {formatCurrency(todaySales.profit)} / {formatCurrency(todaySales.sales)}
-                      </small>
-                    </div>
-                  </Col>
-                </>
-              ) : (
-                <Col xs={12} className="text-center py-4">
-                  <div className="d-flex flex-column align-items-center">
-                    <i className="bi bi-graph-down text-muted fs-1 mb-3"></i>
-                    <p className="text-muted">No sales data available for today.</p>
-                  </div>
-                </Col>
-              )}
-            </Row>
-            <div className="text-center mt-2">
-              <Button 
-                variant="primary" 
-                onClick={() => navigate('/sales-analytics')}
-                size="sm"
-              >
-                View Detailed Analytics
+            <div className="pos-card__header">
+              <div>
+                <h5 className="mb-1 d-flex align-items-center gap-2">
+                  <i className="bi bi-graph-up-arrow text-primary"></i>
+                  Today's Performance
+                </h5>
+                <p className="text-muted mb-0">Sales, profit and activity for the current day.</p>
+              </div>
+              <Button variant="primary" size="sm" onClick={() => navigate('/sales-analytics')}>
+                View Analytics
               </Button>
             </div>
+            {salesLoading ? (
+              <div className="text-center py-4">
+                <Spinner animation="border" />
+                <p className="text-muted mt-3 mb-0">Loading sales data...</p>
+              </div>
+            ) : todaySales ? (
+              <Row className="g-3">
+                <Col xs={12} md={3}>
+                  <div className="dashboard-stat-card">
+                    <div className="dashboard-stat-card__label">Sales</div>
+                    <div className="dashboard-stat-card__value">{formatCurrency(todaySales.sales)}</div>
+                    <div className="dashboard-stat-card__trend">
+                      <i className="bi bi-receipt"></i> {todaySales.transactionCount} transactions
+                    </div>
+                  </div>
+                </Col>
+                <Col xs={12} md={3}>
+                  <div className="dashboard-stat-card">
+                    <div className="dashboard-stat-card__label">Profit</div>
+                    <div className="dashboard-stat-card__value">{formatCurrency(todaySales.profit)}</div>
+                    <div className="dashboard-stat-card__trend">
+                      <i className="bi bi-graph-up"></i>{' '}
+                      {todaySales.sales > 0
+                        ? `${((todaySales.profit / todaySales.sales) * 100).toFixed(1)}% margin`
+                        : 'No sales yet'}
+                    </div>
+                  </div>
+                </Col>
+                <Col xs={12} md={3}>
+                  <div className="dashboard-stat-card">
+                    <div className="dashboard-stat-card__label">Average Ticket</div>
+                    <div className="dashboard-stat-card__value">
+                      {todaySales.transactionCount > 0
+                        ? formatCurrency(todaySales.sales / todaySales.transactionCount)
+                        : formatCurrency(0)}
+                    </div>
+                    <div className="dashboard-stat-card__trend">
+                      <i className="bi bi-basket3"></i> Per receipt
+                    </div>
+                  </div>
+                </Col>
+                <Col xs={12} md={3}>
+                  <div className="dashboard-stat-card">
+                    <div className="dashboard-stat-card__label">Attendance</div>
+                    <div className="dashboard-stat-card__value">
+                      {translatedAttendance.present}/{translatedAttendance.total}
+                    </div>
+                    <div className="dashboard-stat-card__trend">
+                      <i className="bi bi-people"></i> On duty today
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+            ) : (
+              <div className="text-center py-4">
+                <i className="bi bi-graph-down text-muted fs-1"></i>
+                <p className="text-muted mt-3 mb-0">No sales recorded for today yet.</p>
+              </div>
+            )}
           </Card.Body>
         </Card>
-        
+
         <Row className="g-4">
           <Col xs={12} md={6} lg={4}>
             <Card className="h-100 dashboard-card slide-in-up">
