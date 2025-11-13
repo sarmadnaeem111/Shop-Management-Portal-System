@@ -20,6 +20,15 @@
   border: 1px solid #ced4da;
 }
 
+/* Ensure dropdown menu is visible when using menuPortal */
+.basic-single .select__menu-portal {
+  z-index: 9999 !important;
+}
+
+.basic-single .select__menu-portal .select__menu {
+  z-index: 9999 !important;
+}
+
 .basic-single .select__option--is-focused {
   background-color: #f8f9fa;
 }
