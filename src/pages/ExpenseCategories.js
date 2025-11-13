@@ -197,24 +197,25 @@ const ExpenseCategories = () => {
     <>
       <MainNavbar />
       <Container className="pb-4">
-        <div className="d-flex justify-content-between align-items-center my-3">
-          <PageHeader title="Expense Categories" icon="bi-tags" color="primary" />
-          <div>
-            <Button 
-              variant="outline-secondary" 
-              onClick={() => navigate('/expenses')}
-              className="me-2"
-            >
-              <Translate textKey="backToExpenses" fallback="Back to Expenses" />
-            </Button>
-            <Button 
-              variant="primary" 
-              onClick={() => setShowAddForm(true)}
-              disabled={showAddForm}
-            >
-              <Translate textKey="addCategory" fallback="Add Category" />
-            </Button>
-          </div>
+        <PageHeader 
+          title="Expense Categories" 
+          icon="bi-tags" 
+          subtitle="Organize your expenses by category for clearer financial reports."
+        />
+        <div className="page-header-actions">
+          <Button 
+            variant="outline-secondary" 
+            onClick={() => navigate('/expenses')}
+          >
+            <Translate textKey="backToExpenses" fallback="Back to Expenses" />
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={() => setShowAddForm(true)}
+            disabled={showAddForm}
+          >
+            <Translate textKey="addCategory" fallback="Add Category" />
+          </Button>
         </div>
         
         {error && <Alert variant="danger">{error}</Alert>}
