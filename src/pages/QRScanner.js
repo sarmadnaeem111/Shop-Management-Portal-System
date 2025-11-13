@@ -192,9 +192,13 @@ const QRScanner = () => {
     <>
       <MainNavbar />
       <Container className="mt-4">
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <PageHeader title="QR Code Scanner" icon="bi-qr-code-scan" color="primary" />
-          <Button variant="secondary" onClick={() => navigate('/attendance')}>
+        <PageHeader 
+          title="QR Code Scanner" 
+          icon="bi-qr-code-scan" 
+          subtitle="Quickly mark attendance by scanning employee QR badges."
+        />
+        <div className="page-header-actions">
+          <Button variant="outline-secondary" onClick={() => navigate('/attendance')}>
             Back to Attendance
           </Button>
         </div>
