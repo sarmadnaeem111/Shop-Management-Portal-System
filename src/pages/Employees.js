@@ -96,26 +96,25 @@ const Employees = () => {
     <>
       <MainNavbar />
       <Container>
-        <Row className="mb-4">
-          <Col>
-            <PageHeader title="Employees" icon="bi-people" color="primary" />
-          </Col>
-          <Col className="text-end">
-            <Button 
-              variant="outline-primary"
-              className="me-2"
-              onClick={() => navigate('/employee-cards')}
-            >
-              QR Cards
-            </Button>
-            <Button 
-              variant="success" 
-              onClick={() => navigate('/add-employee')}
-            >
-              <Translate textKey="addNewEmployee" />
-            </Button>
-          </Col>
-        </Row>
+        <PageHeader 
+          title="Employees" 
+          icon="bi-people" 
+          subtitle="Manage your team, update roles, and keep employee information centralized."
+        />
+        <div className="page-header-actions">
+          <Button 
+            variant="outline-primary"
+            onClick={() => navigate('/employee-cards')}
+          >
+            QR Cards
+          </Button>
+          <Button 
+            variant="success" 
+            onClick={() => navigate('/add-employee')}
+          >
+            <Translate textKey="addNewEmployee" />
+          </Button>
+        </div>
 
         {error && <Alert variant="danger">{error}</Alert>}
 
