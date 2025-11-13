@@ -147,9 +147,15 @@ const AddStockEntry = () => {
     <>
       <MainNavbar />
       <Container className="mt-3">
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <PageHeader title="Add Stock" icon="bi-box-arrow-in-down" color="primary" />
-          <Button variant="secondary" onClick={() => navigate('/stock')}>Back to Inventory</Button>
+        <PageHeader 
+          title="Add Stock" 
+          icon="bi-box-arrow-in-down" 
+          subtitle="Record incoming deliveries and update product quantities."
+        />
+        <div className="page-header-actions">
+          <Button variant="outline-secondary" onClick={() => navigate('/stock')}>
+            Back to Inventory
+          </Button>
         </div>
         <Card>
           <Card.Body>
