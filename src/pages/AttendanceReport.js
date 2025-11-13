@@ -250,7 +250,11 @@ const AttendanceReport = () => {
     <>
       <MainNavbar />
       <Container>
-        <PageHeader title="Attendance Report" icon="bi-clipboard-data" color="primary" />
+        <PageHeader 
+          title="Attendance Report" 
+          icon="bi-clipboard-data" 
+          subtitle="Generate monthly or custom range reports and export detailed attendance logs."
+        />
         
         {error && <Alert variant="danger">{error}</Alert>}
         
