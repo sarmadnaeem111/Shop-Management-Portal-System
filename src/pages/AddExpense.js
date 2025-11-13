@@ -188,8 +188,12 @@ const AddExpense = () => {
     <>
       <MainNavbar />
       <Container className="pb-4">
-        <div className="d-flex justify-content-between align-items-center my-3">
-          <PageHeader title="Add Expense" icon="bi-wallet2" color="primary" />
+        <PageHeader 
+          title="Add Expense" 
+          icon="bi-wallet2" 
+          subtitle="Capture a new expense entry and keep your spending organized."
+        />
+        <div className="page-header-actions">
           <Button 
             variant="outline-secondary" 
             onClick={() => navigate('/expenses')}
