@@ -266,7 +266,11 @@ const Settings = () => {
     <>
       <MainNavbar />
       <Container>
-        <PageHeader title="Shop Settings" icon="bi-gear" color="primary" />
+        <PageHeader 
+          title="Shop Settings" 
+          icon="bi-gear" 
+          subtitle="Customize your store profile, contact details, and receipt preferences."
+        />
         
         {error && <Alert variant="danger">{error}</Alert>}
         {success && <Alert variant="success">{success}</Alert>}
