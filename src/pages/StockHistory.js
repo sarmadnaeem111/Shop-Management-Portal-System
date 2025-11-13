@@ -58,10 +58,14 @@ const StockHistory = () => {
     <>
       <MainNavbar />
       <Container className="mt-3">
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <PageHeader title="Stock History" icon="bi-clock-history" color="primary" />
-          <div className="d-flex gap-2">
-            <Button variant="secondary" onClick={() => navigate('/stock')}>Back</Button>
+        <PageHeader 
+          title="Stock History" 
+          icon="bi-clock-history" 
+          subtitle="Review all stock in and stock out transactions for your store."
+        />
+        <div className="page-header-actions">
+          <div className="d-flex gap-2 flex-wrap">
+            <Button variant="outline-secondary" onClick={() => navigate('/stock')}>Back</Button>
             <Button variant="primary" onClick={printHistory}>Print</Button>
           </div>
         </div>
