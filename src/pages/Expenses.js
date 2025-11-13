@@ -136,23 +136,24 @@ const Expenses = () => {
     <>
       <MainNavbar />
       <Container className="pb-4">
-        <div className="d-flex justify-content-between align-items-center my-3">
-          <PageHeader title="Expenses" icon="bi-wallet2" color="primary" />
-          <div>
-            <Button 
-              variant="primary" 
-              onClick={() => navigate('/add-expense')}
-              className="me-2"
-            >
-              <Translate textKey="addExpense" fallback="Add Expense" />
-            </Button>
-            <Button 
-              variant="outline-primary" 
-              onClick={() => navigate('/expense-categories')}
-            >
-              <Translate textKey="manageCategories" fallback="Manage Categories" />
-            </Button>
-          </div>
+        <PageHeader 
+          title="Expenses" 
+          icon="bi-wallet2" 
+          subtitle="Track day-to-day spending, filter by category, and stay on top of costs."
+        />
+        <div className="page-header-actions">
+          <Button 
+            variant="primary" 
+            onClick={() => navigate('/add-expense')}
+          >
+            <Translate textKey="addExpense" fallback="Add Expense" />
+          </Button>
+          <Button 
+            variant="outline-primary" 
+            onClick={() => navigate('/expense-categories')}
+          >
+            <Translate textKey="manageCategories" fallback="Manage Categories" />
+          </Button>
         </div>
         
         {error && <Alert variant="danger">{error}</Alert>}
