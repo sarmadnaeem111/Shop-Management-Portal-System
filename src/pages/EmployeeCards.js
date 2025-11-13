@@ -180,12 +180,18 @@ const EmployeeCards = () => {
     <>
       <MainNavbar />
       <Container className="mt-4 employee-cards-container">
-        <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 page-header-section">
-          <PageHeader title="Employee QR Cards" icon="bi-qr-code" color="primary" />
-          <div className="d-flex gap-2 mt-2 mt-md-0 header-buttons">
-            <Button variant="secondary" className="back-btn" onClick={() => navigate('/employees')}>Back</Button>
-            <Button variant="primary" className="print-btn" onClick={handlePrint}>Print</Button>
-          </div>
+        <PageHeader 
+          title="Employee QR Cards" 
+          icon="bi-qr-code" 
+          subtitle="Generate printable ID cards and QR codes for your employee roster."
+        />
+        <div className="page-header-actions">
+          <Button variant="outline-secondary" className="back-btn" onClick={() => navigate('/employees')}>
+            Back
+          </Button>
+          <Button variant="primary" className="print-btn" onClick={handlePrint}>
+            Print
+          </Button>
         </div>
 
         <Form className="mb-3 search-bar">
@@ -311,9 +317,9 @@ const EmployeeCards = () => {
                               <div className="qr-code-placeholder">
                                 <i className="bi bi-qr-code-scan"></i>
                                 <span>No QR</span>
-                              </div>
-                            )}
-                          </div>
+                        </div>
+                      )}
+                    </div>
                           <div className="qr-label">
                             <i className="bi bi-phone me-1"></i>
                             Scan for Details
@@ -335,7 +341,7 @@ const EmployeeCards = () => {
                         </div>
                       </div>
                     </div>
-                  </div>
+                    </div>
 
                   {/* Action Buttons */}
                   <div className="mt-3 w-100 d-print-none text-center">
