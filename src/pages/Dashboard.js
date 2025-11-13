@@ -25,6 +25,9 @@ const Dashboard = () => {
   const translatedShopData = shopData;
   const translatedReceipts = recentReceipts;
   const translatedAttendance = todayAttendance;
+  const staffPermissionCount = staffData?.permissions
+    ? Object.values(staffData.permissions).filter(Boolean).length
+    : 0;
 
   // Fetch daily sales and profit data
   useEffect(() => {
@@ -143,40 +146,80 @@ const Dashboard = () => {
     return (
       <>
         <MainNavbar />
-        <Container className="pb-4">
-          <div className="d-flex align-items-center mb-4">
-            <div className="me-3">
-              <div className="bg-primary rounded-circle d-flex align-items-center justify-content-center" style={{width: '60px', height: '60px'}}>
-                <i className="bi bi-person-badge text-white fs-3"></i>
-              </div>
+        <Container className="pos-content">
+          <PageHeader
+            title="Staff Dashboard"
+            icon="bi-person-badge"
+            subtitle={`Welcome back ${staffData.name || currentUser?.email || ''}. Here's a snapshot of your access.`}
+          >
+            <div className="hero-metrics__item">
+              <span className="hero-metrics__label">Shop</span>
+              <span className="hero-metrics__value">{shopData?.shopName || '—'}</span>
             </div>
-            <div>
-              <h2 className="mb-1 fw-bold text-primary">Staff Dashboard</h2>
-              <p className="text-muted mb-0">Welcome, {staffData.name || currentUser?.email}! Here's your workspace.</p>
+            <div className="hero-metrics__item">
+              <span className="hero-metrics__label">Permissions</span>
+              <span className="hero-metrics__value">{staffPermissionCount}</span>
             </div>
+            <div className="hero-metrics__item">
+              <span className="hero-metrics__label">Role</span>
+              <span className="hero-metrics__value">{staffData.role || 'Team Member'}</span>
+            </div>
+            <div className="hero-metrics__item">
+              <span className="hero-metrics__label">Attendance</span>
+              <span className="hero-metrics__value">
+                {translatedAttendance.present}/{translatedAttendance.total}
+              </span>
+            </div>
+          </PageHeader>
+          <div className="page-header-actions">
+            {staffData.permissions?.canCreateReceipts && (
+              <Button variant="primary" onClick={() => navigate('/new-receipt')}>
+                <i className="bi bi-plus-lg me-1"></i>
+                <Translate textKey="newReceipt" />
+              </Button>
+            )}
+            {staffData.permissions?.canViewReceipts && (
+              <Button variant="outline-primary" onClick={() => navigate('/receipts')}>
+                <Translate textKey="receipts" />
+              </Button>
+            )}
           </div>
           
           {shopData && (
-            <Card className="mb-4 dashboard-card slide-in-up">
-              <Card.Header className="d-flex align-items-center">
-                <i className="bi bi-shop me-2"></i>
-                <span>{shopData.shopName}</span>
-              </Card.Header>
+            <Card className="pos-card dashboard-section slide-in-up">
               <Card.Body>
-                <Row>
-                  <Col md={6}>
-                    <div className="d-flex align-items-center mb-2">
-                      <i className="bi bi-geo-alt text-primary me-2"></i>
-                      <strong>Address:</strong>
+                <div className="pos-card__header">
+                  <div>
+                    <h5 className="mb-1 d-flex align-items-center gap-2">
+                      <i className="bi bi-shop text-primary"></i>
+                      {shopData.shopName}
+                    </h5>
+                    <p className="text-muted mb-0">Store overview for your reference.</p>
+                  </div>
+                  <span className="pos-badge">Shop Info</span>
+                </div>
+                <Row className="g-4">
+                  <Col md={4}>
+                    <div className="d-flex flex-column">
+                      <span className="text-uppercase text-muted fw-semibold small">Address</span>
+                      <span className="fw-semibold text-primary mt-1">{shopData.address || 'Not provided'}</span>
                     </div>
-                    <p className="ms-4 text-muted">{shopData.address}</p>
                   </Col>
-                  <Col md={6}>
-                    <div className="d-flex align-items-center mb-2">
-                      <i className="bi bi-telephone text-primary me-2"></i>
-                      <strong>Phone:</strong>
+                  <Col md={4}>
+                    <div className="d-flex flex-column">
+                      <span className="text-uppercase text-muted fw-semibold small">Phone</span>
+                      <span className="fw-semibold text-primary mt-1">
+                        {Array.isArray(shopData.phoneNumbers) && shopData.phoneNumbers.length > 0
+                          ? shopData.phoneNumbers.join(', ')
+                          : shopData.phoneNumber || '-'}
+                      </span>
                     </div>
-                    <p className="ms-4 text-muted">{shopData.phoneNumber}</p>
+                  </Col>
+                  <Col md={4}>
+                    <div className="d-flex flex-column">
+                      <span className="text-uppercase text-muted fw-semibold small">Reporting To</span>
+                      <span className="fw-semibold text-primary mt-1">{shopData.ownerName || shopData.shopName}</span>
+                    </div>
                   </Col>
                 </Row>
               </Card.Body>
