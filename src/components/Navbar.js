@@ -31,6 +31,32 @@ const MainNavbar = () => {
   };
   const isActive = (path) => location.pathname === path;
 
+  const userDisplayName = staffData?.name || shopData?.ownerName || currentUser?.displayName || currentUser?.email || 'User';
+  let userRoleLabel = 'Super Admin';
+  if (isGuest) {
+    userRoleLabel = 'Guest User';
+  } else if (isStaff) {
+    userRoleLabel = staffData?.role || 'Staff Member';
+  }
+
+  const renderNavItem = (path, icon, label, closeSidebar = false) => (
+    <Nav.Link
+      as={Link}
+      to={path}
+      className={`sidebar-link ${isActive(path) ? 'active' : ''}`}
+      onClick={() => {
+        if (closeSidebar) {
+          setShowSidebar(false);
+        }
+      }}
+    >
+      <span className="sidebar-icon">
+        <i className={`bi ${icon}`}></i>
+      </span>
+      <span className="sidebar-text">{label}</span>
+    </Nav.Link>
+  );
+
   return (
     <>
       {/* Mobile Top Bar with Menu Button */}
@@ -53,55 +79,66 @@ const MainNavbar = () => {
           </Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
+          {currentUser && (
+            <div className="sidebar-user-card mb-4">
+              <div className="sidebar-user-icon">
+                <i className="bi bi-person-fill"></i>
+              </div>
+              <div>
+                <div className="sidebar-user-name">{userDisplayName}</div>
+                <div className="sidebar-user-role">{userRoleLabel}</div>
+              </div>
+            </div>
+          )}
           <Nav className="flex-column sidebar-nav">
             {currentUser ? (
               <>
-                <Nav.Link as={Link} to="/dashboard" className={`sidebar-link ${isActive('/dashboard') ? 'active' : ''}`} onClick={() => setShowSidebar(false)}><i className="bi bi-speedometer2 me-2"></i><Translate textKey="dashboard" /></Nav.Link>
+                {renderNavItem('/dashboard', 'bi-speedometer2', <Translate textKey="dashboard" />, true)}
                 {hasPermission('canCreateReceipts') && (
-                  <Nav.Link as={Link} to="/new-receipt" className={`sidebar-link ${isActive('/new-receipt') ? 'active' : ''}`} onClick={() => setShowSidebar(false)}><i className="bi bi-receipt me-2"></i><Translate textKey="newReceipt" /></Nav.Link>
+                  renderNavItem('/new-receipt', 'bi-receipt', <Translate textKey="newReceipt" />, true)
                 )}
                 {hasPermission('canViewReceipts') && (
-                  <Nav.Link as={Link} to="/receipts" className={`sidebar-link ${isActive('/receipts') ? 'active' : ''}`} onClick={() => setShowSidebar(false)}><i className="bi bi-journal-text me-2"></i><Translate textKey="receipts" /></Nav.Link>
+                  renderNavItem('/receipts', 'bi-journal-text', <Translate textKey="receipts" />, true)
                 )}
                 {hasPermission('canViewAnalytics') && (
-                  <Nav.Link as={Link} to="/sales-analytics" className={`sidebar-link ${isActive('/sales-analytics') ? 'active' : ''}`} onClick={() => setShowSidebar(false)}><i className="bi bi-bar-chart me-2"></i><Translate textKey="salesAnalytics" fallback="Sales Analytics" /></Nav.Link>
+                  renderNavItem('/sales-analytics', 'bi-bar-chart', <Translate textKey="salesAnalytics" fallback="Sales Analytics" />, true)
                 )}
                 {hasPermission('canViewStock') && (
-                  <Nav.Link as={Link} to="/stock" className={`sidebar-link ${isActive('/stock') ? 'active' : ''}`} onClick={() => setShowSidebar(false)}><i className="bi bi-box-seam me-2"></i><Translate textKey="inventory" /></Nav.Link>
+                  renderNavItem('/stock', 'bi-box-seam', <Translate textKey="inventory" />, true)
                 )}
                 {hasPermission('canViewEmployees') && (
                   <>
-                    <Nav.Link as={Link} to="/employees" className={`sidebar-link ${isActive('/employees') ? 'active' : ''}`} onClick={() => setShowSidebar(false)}><i className="bi bi-people me-2"></i><Translate textKey="viewEmployees" /></Nav.Link>
+                    {renderNavItem('/employees', 'bi-people', <Translate textKey="viewEmployees" />, true)}
                     {!isStaff && (
-                      <Nav.Link as={Link} to="/add-employee" className={`sidebar-link ${isActive('/add-employee') ? 'active' : ''}`} onClick={() => setShowSidebar(false)}><i className="bi bi-person-plus me-2"></i><Translate textKey="addEmployee" /></Nav.Link>
+                      renderNavItem('/add-employee', 'bi-person-plus', <Translate textKey="addEmployee" />, true)
                     )}
                   </>
                 )}
                 {hasPermission('canManageExpenses') && (
                   <>
-                    <Nav.Link as={Link} to="/expenses" className={`sidebar-link ${isActive('/expenses') ? 'active' : ''}`} onClick={() => setShowSidebar(false)}><i className="bi bi-cash-coin me-2"></i><Translate textKey="viewExpenses" fallback="View Expenses" /></Nav.Link>
+                    {renderNavItem('/expenses', 'bi-cash-coin', <Translate textKey="viewExpenses" fallback="View Expenses" />, true)}
                     {!isStaff && (
                       <>
-                        <Nav.Link as={Link} to="/add-expense" className={`sidebar-link ${isActive('/add-expense') ? 'active' : ''}`} onClick={() => setShowSidebar(false)}><i className="bi bi-plus-circle me-2"></i><Translate textKey="addExpense" fallback="Add Expense" /></Nav.Link>
-                        <Nav.Link as={Link} to="/expense-categories" className={`sidebar-link ${isActive('/expense-categories') ? 'active' : ''}`} onClick={() => setShowSidebar(false)}><i className="bi bi-tags me-2"></i><Translate textKey="expenseCategories" fallback="Expense Categories" /></Nav.Link>
+                        {renderNavItem('/add-expense', 'bi-plus-circle', <Translate textKey="addExpense" fallback="Add Expense" />, true)}
+                        {renderNavItem('/expense-categories', 'bi-tags', <Translate textKey="expenseCategories" fallback="Expense Categories" />, true)}
                       </>
                     )}
                   </>
                 )}
                 {hasPermission('canMarkAttendance') && (
                   <>
-                    <Nav.Link as={Link} to="/attendance" className={`sidebar-link ${isActive('/attendance') ? 'active' : ''}`} onClick={() => setShowSidebar(false)}><i className="bi bi-calendar-check me-2"></i><Translate textKey="viewAttendance" /></Nav.Link>
-                    <Nav.Link as={Link} to="/mark-attendance" className={`sidebar-link ${isActive('/mark-attendance') ? 'active' : ''}`} onClick={() => setShowSidebar(false)}><i className="bi bi-check2-square me-2"></i><Translate textKey="markAttendance" /></Nav.Link>
+                    {renderNavItem('/attendance', 'bi-calendar-check', <Translate textKey="viewAttendance" />, true)}
+                    {renderNavItem('/mark-attendance', 'bi-check2-square', <Translate textKey="markAttendance" />, true)}
                     {!isStaff && (
-                      <Nav.Link as={Link} to="/attendance-report" className={`sidebar-link ${isActive('/attendance-report') ? 'active' : ''}`} onClick={() => setShowSidebar(false)}><i className="bi bi-clipboard-data me-2"></i><Translate textKey="attendanceReport" /></Nav.Link>
+                      renderNavItem('/attendance-report', 'bi-clipboard-data', <Translate textKey="attendanceReport" />, true)
                     )}
                   </>
                 )}
                 {!isStaff && !isGuest && (
-                  <Nav.Link as={Link} to="/settings" className={`sidebar-link ${isActive('/settings') ? 'active' : ''}`} onClick={() => setShowSidebar(false)}><i className="bi bi-gear me-2"></i><Translate textKey="settings" /></Nav.Link>
+                  renderNavItem('/settings', 'bi-gear', <Translate textKey="settings" />, true)
                 )}
                 {!isStaff && !isGuest && (
-                  <Nav.Link as={Link} to="/staff-management" className={`sidebar-link ${isActive('/staff-management') ? 'active' : ''}`} onClick={() => setShowSidebar(false)}><i className="bi bi-people-gear me-2"></i>Staff Management</Nav.Link>
+                  renderNavItem('/staff-management', 'bi-people-gear', 'Staff Management', true)
                 )}
                 <div className="d-flex mt-3">
                   <LanguageToggle />
@@ -127,95 +164,71 @@ const MainNavbar = () => {
 
       {/* Desktop fixed sidebar */}
       <div className="app-sidebar d-none d-lg-block">
-        <div className="px-3 mb-3 fw-bold sidebar-brand">
-          <Link to="/dashboard" className="text-decoration-none">
+        <div className="sidebar-top">
+          <Link to="/dashboard" className="sidebar-logo text-decoration-none">
             {shopData ? shopData.shopName : 'Shop Billing System'}
           </Link>
+          {currentUser && (
+            <div className="sidebar-user-meta">
+              <div className="sidebar-user-name">{userDisplayName}</div>
+              <div className="sidebar-user-role">{userRoleLabel}</div>
+            </div>
+          )}
         </div>
-        <Nav className="flex-column px-3 sidebar-nav">
+        <Nav className="flex-column sidebar-nav">
           {currentUser && (
             <>
-              <Nav.Link as={Link} to="/dashboard" className={`rounded py-2 sidebar-link ${isActive('/dashboard') ? 'active' : ''}`}>
-                <i className="bi bi-speedometer2 me-2"></i> <Translate textKey="dashboard" />
-              </Nav.Link>
+              {renderNavItem('/dashboard', 'bi-speedometer2', <Translate textKey="dashboard" />)}
               {hasPermission('canCreateReceipts') && (
-                <Nav.Link as={Link} to="/new-receipt" className={`rounded py-2 sidebar-link ${isActive('/new-receipt') ? 'active' : ''}`}>
-                  <i className="bi bi-receipt me-2"></i> <Translate textKey="newReceipt" />
-                </Nav.Link>
+                renderNavItem('/new-receipt', 'bi-receipt', <Translate textKey="newReceipt" />)
               )}
               {hasPermission('canViewReceipts') && (
-                <Nav.Link as={Link} to="/receipts" className={`rounded py-2 sidebar-link ${isActive('/receipts') ? 'active' : ''}`}>
-                  <i className="bi bi-journal-text me-2"></i> <Translate textKey="receipts" />
-                </Nav.Link>
+                renderNavItem('/receipts', 'bi-journal-text', <Translate textKey="receipts" />)
               )}
               {hasPermission('canViewAnalytics') && (
-                <Nav.Link as={Link} to="/sales-analytics" className={`rounded py-2 sidebar-link ${isActive('/sales-analytics') ? 'active' : ''}`}>
-                  <i className="bi bi-bar-chart me-2"></i> <Translate textKey="salesAnalytics" fallback="Sales Analytics" />
-                </Nav.Link>
+                renderNavItem('/sales-analytics', 'bi-bar-chart', <Translate textKey="salesAnalytics" fallback="Sales Analytics" />)
               )}
               {hasPermission('canViewStock') && (
-                <Nav.Link as={Link} to="/stock" className={`rounded py-2 sidebar-link ${isActive('/stock') ? 'active' : ''}`}>
-                  <i className="bi bi-box-seam me-2"></i> <Translate textKey="inventory" />
-                </Nav.Link>
+                renderNavItem('/stock', 'bi-box-seam', <Translate textKey="inventory" />)
               )}
               {hasPermission('canViewEmployees') && (
                 <>
-                  <Nav.Link as={Link} to="/employees" className={`rounded py-2 sidebar-link ${isActive('/employees') ? 'active' : ''}`}>
-                    <i className="bi bi-people me-2"></i> <Translate textKey="viewEmployees" />
-                  </Nav.Link>
+                  {renderNavItem('/employees', 'bi-people', <Translate textKey="viewEmployees" />)}
                   {!isStaff && (
-                    <Nav.Link as={Link} to="/add-employee" className={`rounded py-2 sidebar-link ${isActive('/add-employee') ? 'active' : ''}`}>
-                      <i className="bi bi-person-plus me-2"></i> <Translate textKey="addEmployee" />
-                    </Nav.Link>
+                    renderNavItem('/add-employee', 'bi-person-plus', <Translate textKey="addEmployee" />)
                   )}
                 </>
               )}
               {hasPermission('canManageExpenses') && (
                 <>
-                  <Nav.Link as={Link} to="/expenses" className={`rounded py-2 sidebar-link ${isActive('/expenses') ? 'active' : ''}`}>
-                    <i className="bi bi-cash-coin me-2"></i> <Translate textKey="viewExpenses" fallback="View Expenses" />
-                  </Nav.Link>
+                  {renderNavItem('/expenses', 'bi-cash-coin', <Translate textKey="viewExpenses" fallback="View Expenses" />)}
                   {!isStaff && (
                     <>
-                      <Nav.Link as={Link} to="/add-expense" className={`rounded py-2 sidebar-link ${isActive('/add-expense') ? 'active' : ''}`}>
-                        <i className="bi bi-plus-circle me-2"></i> <Translate textKey="addExpense" fallback="Add Expense" />
-                      </Nav.Link>
-                      <Nav.Link as={Link} to="/expense-categories" className={`rounded py-2 sidebar-link ${isActive('/expense-categories') ? 'active' : ''}`}>
-                        <i className="bi bi-tags me-2"></i> <Translate textKey="expenseCategories" fallback="Expense Categories" />
-                      </Nav.Link>
+                      {renderNavItem('/add-expense', 'bi-plus-circle', <Translate textKey="addExpense" fallback="Add Expense" />)}
+                      {renderNavItem('/expense-categories', 'bi-tags', <Translate textKey="expenseCategories" fallback="Expense Categories" />)}
                     </>
                   )}
                 </>
               )}
               {hasPermission('canMarkAttendance') && (
                 <>
-                  <Nav.Link as={Link} to="/attendance" className={`rounded py-2 sidebar-link ${isActive('/attendance') ? 'active' : ''}`}>
-                    <i className="bi bi-calendar-check me-2"></i> <Translate textKey="viewAttendance" />
-                  </Nav.Link>
-                  <Nav.Link as={Link} to="/mark-attendance" className={`rounded py-2 sidebar-link ${isActive('/mark-attendance') ? 'active' : ''}`}>
-                    <i className="bi bi-check2-square me-2"></i> <Translate textKey="markAttendance" />
-                  </Nav.Link>
+                  {renderNavItem('/attendance', 'bi-calendar-check', <Translate textKey="viewAttendance" />)}
+                  {renderNavItem('/mark-attendance', 'bi-check2-square', <Translate textKey="markAttendance" />)}
                   {!isStaff && (
-                    <Nav.Link as={Link} to="/attendance-report" className={`rounded py-2 sidebar-link ${isActive('/attendance-report') ? 'active' : ''}`}>
-                      <i className="bi bi-clipboard-data me-2"></i> <Translate textKey="attendanceReport" />
-                    </Nav.Link>
+                    renderNavItem('/attendance-report', 'bi-clipboard-data', <Translate textKey="attendanceReport" />)
                   )}
                 </>
               )}
               {!isStaff && !isGuest && (
-                <Nav.Link as={Link} to="/settings" className={`rounded py-2 sidebar-link ${isActive('/settings') ? 'active' : ''}`}>
-                  <i className="bi bi-gear me-2"></i> <Translate textKey="settings" />
-                </Nav.Link>
+                renderNavItem('/settings', 'bi-gear', <Translate textKey="settings" />)
               )}
               {!isStaff && !isGuest && (
-                <Nav.Link as={Link} to="/staff-management" className={`rounded py-2 sidebar-link ${isActive('/staff-management') ? 'active' : ''}`}>
-                  <i className="bi bi-people-gear me-2"></i> Staff Management
-                </Nav.Link>
+                renderNavItem('/staff-management', 'bi-people-gear', 'Staff Management')
               )}
             </>
           )}
         </Nav>
-        <div className="px-3 mt-3 sidebar-footer">
+        <div className="sidebar-footer">
             {currentUser ? (
               <>
                 <LanguageToggle />
@@ -234,7 +247,7 @@ const MainNavbar = () => {
       </div>
 
       {/* Spacer so page content doesn't slide under the fixed sidebar on desktop */}
-      <div className="d-none d-lg-block" style={{ width: '250px' }} />
+      <div className="d-none d-lg-block" style={{ width: '280px' }} />
     </>
   );
 };
