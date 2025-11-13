@@ -6,9 +6,9 @@
   left: 0;
   z-index: 200;
   padding: 20px 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.15);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--sidebar-gradient);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .sidebar-brand a {
@@ -37,11 +37,11 @@
 }
 
 .sidebar-nav .sidebar-link.active {
-  background: rgba(255, 255, 255, 0.25) !important;
+  background: rgba(255, 255, 255, 0.18) !important;
   color: #ffffff !important;
   font-weight: 600;
-  border-left: 3px solid #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #ffb347;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
 }
 
 .sidebar-nav .sidebar-link.active i {
@@ -88,12 +88,13 @@
 
 /* Mobile Sidebar Styling - Matching Desktop Theme */
 .app-mobile-sidebar {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.15);
+  background: var(--sidebar-gradient) !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .app-mobile-sidebar .offcanvas-header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   padding: 1rem 1.25rem;
 }
 
@@ -101,10 +102,11 @@
   color: #ffffff !important;
   font-size: 1.05rem;
   font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
 .app-mobile-sidebar .btn-close {
-  filter: invert(1) grayscale(100%) brightness(200%);
+  filter: invert(1) grayscale(100%) brightness(220%);
   opacity: 0.9;
 }
 
@@ -119,8 +121,9 @@
 }
 
 .app-mobile-sidebar .sidebar-nav .sidebar-link {
-  padding: .5rem .25rem;
+  padding: .6rem .4rem;
   color: rgba(255, 255, 255, 0.9) !important;
+  border-radius: 0.65rem;
 }
 
 .app-mobile-sidebar .sidebar-nav .sidebar-link i {
@@ -128,16 +131,16 @@
 }
 
 .app-mobile-sidebar .sidebar-nav .sidebar-link:hover {
-  background: rgba(255, 255, 255, 0.15) !important;
+  background: rgba(255, 255, 255, 0.18) !important;
   color: #ffffff !important;
 }
 
 .app-mobile-sidebar .sidebar-nav .sidebar-link.active {
-  background: rgba(255, 255, 255, 0.25) !important;
+  background: rgba(255, 255, 255, 0.18) !important;
   color: #ffffff !important;
   font-weight: 600;
-  border-left: 3px solid #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #ffb347;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
 }
 
 .app-mobile-sidebar .sidebar-nav .sidebar-link.active i {
@@ -145,7 +148,7 @@
 }
 
 .app-mobile-sidebar .btn-outline-danger {
-  border-color: rgba(255, 255, 255, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.55) !important;
   color: #ffffff !important;
 }
 
@@ -161,7 +164,7 @@
 
 .app-mobile-sidebar .nav-link:hover {
   color: #ffffff !important;
-  background-color: rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(255, 255, 255, 0.12) !important;
 }
 
 /* Smooth sidebar scrolling */
