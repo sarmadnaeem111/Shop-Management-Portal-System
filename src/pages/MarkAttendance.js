@@ -234,7 +234,11 @@ const MarkAttendance = () => {
     <>
       <MainNavbar />
       <Container className="attendance-container">
-        <PageHeader title="Mark Attendance" icon="bi-check-circle" color="primary" />
+        <PageHeader 
+          title="Mark Attendance" 
+          icon="bi-check-circle" 
+          subtitle="Record daily presence, update shifts, and capture notes for your staff."
+        />
         
         {error && <Alert variant="danger">{error}</Alert>}
         {success && <Alert variant="success">{success}</Alert>}
