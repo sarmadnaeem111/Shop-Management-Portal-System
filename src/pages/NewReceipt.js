@@ -107,6 +107,16 @@ const NewReceipt = () => {
     };
   }, [loading, items]);
 
+  // Cleanup: Remove any print iframes when component unmounts
+  useEffect(() => {
+    return () => {
+      const existingIframe = document.getElementById('print-iframe');
+      if (existingIframe && existingIframe.parentNode) {
+        existingIframe.parentNode.removeChild(existingIframe);
+      }
+    };
+  }, []);
+
   // Handle barcode scan from scanner hardware
   const handleScan = (data) => {
     if (!data) return;
@@ -407,6 +417,7 @@ const NewReceipt = () => {
     setSelectedEmployee(null);
     setError('');
     setSuccess('');
+    setSavedReceiptId(null);
   };
 
   // Get product options for select
@@ -419,7 +430,23 @@ const NewReceipt = () => {
 
   // Print the receipt
   const printReceipt = () => {
-    const printWindow = window.open('', '_blank');
+    // Remove any existing print iframe
+    const existingIframe = document.getElementById('print-iframe');
+    if (existingIframe) {
+      existingIframe.remove();
+    }
+    
+    // Create a hidden iframe for printing
+    const iframe = document.createElement('iframe');
+    iframe.id = 'print-iframe';
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    document.body.appendChild(iframe);
+    
     const currentDate = new Date().toLocaleDateString();
     const currentTime = new Date().toLocaleTimeString();
     
@@ -545,10 +572,24 @@ const NewReceipt = () => {
       </html>
     `;
     
-    printWindow.document.write(receiptHTML);
-    printWindow.document.close();
+    // Write content to iframe
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+    iframeDoc.open();
+    iframeDoc.write(receiptHTML);
+    iframeDoc.close();
     
-    setTimeout(() => { printWindow.print(); }, 250);
+    // Print and remove iframe after printing
+    setTimeout(() => {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+      
+      // Remove iframe after printing completes
+      setTimeout(() => {
+        if (iframe && iframe.parentNode) {
+          iframe.parentNode.removeChild(iframe);
+        }
+      }, 1000);
+    }, 250);
   };
 
   return (
