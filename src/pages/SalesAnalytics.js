@@ -750,9 +750,11 @@ const SalesAnalytics = () => {
     <>
       <MainNavbar />
       <Container>
-        <div className="d-flex justify-content-between align-items-center my-3">
-          <PageHeader title="Sales & Profit Analytics" icon="bi-graph-up" color="primary" />
-        </div>
+        <PageHeader 
+          title="Sales & Profit Analytics" 
+          icon="bi-graph-up" 
+          subtitle="Dive into your sales performance, profit trends, and period comparisons."
+        />
         
         <Card className="mb-4 shadow-sm">
           <Card.Body>
