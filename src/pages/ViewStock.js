@@ -296,12 +296,20 @@ const ViewStock = () => {
       <Container>
         <div className="d-flex justify-content-between align-items-center mb-4">
           <PageHeader title="Stock Inventory" icon="bi-box-seam" color="primary" />
-          <Button 
-            variant="success" 
-            onClick={() => navigate('/add-stock')}
-          >
-            <Translate textKey="addNewItem" />
-          </Button>
+          <div className="d-flex flex-wrap gap-2">
+            <Button
+              variant="primary"
+              onClick={() => navigate('/add-stock-entry')}
+            >
+              <Translate textKey="stockIn" />
+            </Button>
+            <Button 
+              variant="success" 
+              onClick={() => navigate('/add-stock')}
+            >
+              <Translate textKey="addNewItem" />
+            </Button>
+          </div>
         </div>
         
         <Card className="mb-4">
@@ -418,6 +426,14 @@ const ViewStock = () => {
                           </td>
                           <td data-label={getTranslatedAttr("lastUpdated")}>{new Date(item.updatedAt).toLocaleDateString()}</td>
                           <td data-label={getTranslatedAttr("actions")}>
+                            <Button
+                              variant="outline-success"
+                              size="sm"
+                              onClick={() => navigate('/add-stock-entry', { state: { preselectId: item.id } })}
+                              className="me-1 mb-1"
+                            >
+                              <Translate textKey="addQuantity" />
+                            </Button>
                             <Button 
                               variant="outline-primary" 
                               size="sm"
