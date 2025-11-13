@@ -3,6 +3,7 @@ import { Container, Table, Button, Card, Form, InputGroup, Row, Col, Modal } fro
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import MainNavbar from '../components/Navbar';
+import PageHeader from '../components/PageHeader';
 import { formatCurrency, formatDate, deleteReceipt } from '../utils/receiptUtils';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../firebase/config';
@@ -86,6 +87,15 @@ const ViewReceipts = () => {
       return sortDirection === 'asc' ? comparison : -comparison;
     });
 
+  const filteredTotalAmount = filteredReceipts.reduce((sum, receipt) => {
+    const amount = parseFloat(receipt.totalAmount || 0);
+    return sum + (Number.isNaN(amount) ? 0 : amount);
+  }, 0);
+
+  const selectedDateLabel = dateFilter
+    ? new Date(dateFilter).toLocaleDateString()
+    : 'All Dates';
+
   // Handle sorting
   const handleSort = (field) => {
     if (field === sortField) {
@@ -151,16 +161,41 @@ const ViewReceipts = () => {
     <>
       <MainNavbar />
       <Container>
-        <div className="d-flex align-items-center mb-4">
-          <div className="me-3">
-            <div className="bg-primary rounded-circle d-flex align-items-center justify-content-center" style={{width: '60px', height: '60px'}}>
-              <i className="bi bi-list-ul text-white fs-3"></i>
-            </div>
+        <PageHeader
+          title={<Translate textKey="allReceipts" />}
+          icon="bi-list-ul"
+          subtitle="Review each invoice, drill into items, and keep your sales history organized."
+        >
+          <div className="hero-metrics__item">
+            <span className="hero-metrics__label">Total Receipts</span>
+            <span className="hero-metrics__value">{receipts.length}</span>
           </div>
-          <div>
-            <h2 className="mb-1 fw-bold text-primary"><Translate textKey="allReceipts" /></h2>
-            <p className="text-muted mb-0">View and manage all your receipts</p>
+          <div className="hero-metrics__item">
+            <span className="hero-metrics__label">Filtered Count</span>
+            <span className="hero-metrics__value">{filteredReceipts.length}</span>
           </div>
+          <div className="hero-metrics__item">
+            <span className="hero-metrics__label">Filtered Total</span>
+            <span className="hero-metrics__value">{formatCurrency(filteredTotalAmount)}</span>
+          </div>
+          <div className="hero-metrics__item">
+            <span className="hero-metrics__label">Date Filter</span>
+            <span className="hero-metrics__value">{selectedDateLabel}</span>
+          </div>
+        </PageHeader>
+        <div className="page-header-actions">
+          <Button 
+            variant="primary" 
+            onClick={() => navigate('/new-receipt')}
+          >
+            <Translate textKey="receiptCreateNew" fallback="Create Receipt" />
+          </Button>
+          <Button 
+            variant="outline-primary" 
+            onClick={() => navigate('/sales-analytics')}
+          >
+            <Translate textKey="salesAnalytics" fallback="Sales Analytics" />
+          </Button>
         </div>
         
         <Card className="mb-4 dashboard-card slide-in-up">
