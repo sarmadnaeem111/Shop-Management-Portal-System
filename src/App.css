@@ -153,8 +153,8 @@ body {
 
 /* Mobile Offcanvas sidebar overrides */
 .app-mobile-sidebar {
-  color: var(--text-primary);
-  background: white;
+  color: rgba(255, 255, 255, 0.92) !important;
+  background: var(--sidebar-gradient) !important;
 }
 
 .pos-content {
@@ -439,19 +439,42 @@ body {
 }
 
 .app-mobile-sidebar .nav-link {
-  color: var(--text-primary) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
   font-weight: 600;
 }
 
 .app-mobile-sidebar .nav-link.active,
 .app-mobile-sidebar .nav-link:active {
-  color: var(--primary-color) !important;
-  background-color: rgba(99, 102, 241, 0.12);
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.18) !important;
   border-radius: 12px;
 }
 
 .app-mobile-sidebar .btn-outline-danger {
-  border-color: #dc3545;
+  border-color: rgba(255, 255, 255, 0.55) !important;
+  color: #ffffff !important;
+}
+
+.app-mobile-sidebar .btn-outline-danger:hover {
+  background-color: #dc3545 !important;
+  border-color: #dc3545 !important;
+  color: #ffffff !important;
+}
+
+/* Ensure all text elements in mobile sidebar are visible */
+.app-mobile-sidebar .sidebar-user-card,
+.app-mobile-sidebar .sidebar-user-card *,
+.app-mobile-sidebar .sidebar-user-name,
+.app-mobile-sidebar .sidebar-user-role {
+  color: #ffffff !important;
+}
+
+.app-mobile-sidebar .offcanvas-title {
+  color: #ffffff !important;
+}
+
+.app-mobile-sidebar .sidebar-nav .sidebar-link .sidebar-text {
+  color: rgba(255, 255, 255, 0.9) !important;
 }
 
 .nav-link {
