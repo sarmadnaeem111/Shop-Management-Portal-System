@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Navbar, Nav, Container, Button, NavDropdown, Offcanvas } from 'react-bootstrap';
+import { Navbar, Nav, Container, Button, Offcanvas } from 'react-bootstrap';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -39,7 +39,77 @@ const MainNavbar = () => {
     userRoleLabel = staffData?.role || 'Staff Member';
   }
 
-  const renderNavItem = (path, icon, label, closeSidebar = false) => (
+  const defaultGoogleIconStyle = {
+    background: 'linear-gradient(135deg, #4285F4 0%, #34A853 100%)',
+    color: '#ffffff'
+  };
+
+  const googleIconPalette = {
+    dashboard: {
+      background: 'linear-gradient(135deg, #4285F4 0%, #34A853 100%)',
+      color: '#ffffff'
+    },
+    point_of_sale: {
+      background: 'linear-gradient(135deg, #EA4335 0%, #FBBC05 100%)',
+      color: '#ffffff'
+    },
+    receipt_long: {
+      background: 'linear-gradient(135deg, #34A853 0%, #0F9D58 100%)',
+      color: '#ffffff'
+    },
+    query_stats: {
+      background: 'linear-gradient(135deg, #A142F4 0%, #4285F4 100%)',
+      color: '#ffffff'
+    },
+    inventory_2: {
+      background: 'linear-gradient(135deg, #F2994A 0%, #F2C94C 100%)',
+      color: '#0b1f4e'
+    },
+    groups: {
+      background: 'linear-gradient(135deg, #34A853 0%, #B8E986 100%)',
+      color: '#0b1f4e'
+    },
+    group_add: {
+      background: 'linear-gradient(135deg, #1B74E4 0%, #54C6FF 100%)',
+      color: '#ffffff'
+    },
+    payments: {
+      background: 'linear-gradient(135deg, #FBBC05 0%, #FEEA84 100%)',
+      color: '#0b1f4e'
+    },
+    add_card: {
+      background: 'linear-gradient(135deg, #EA4335 0%, #FF8A65 100%)',
+      color: '#ffffff'
+    },
+    category: {
+      background: 'linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%)',
+      color: '#ffffff'
+    },
+    event_available: {
+      background: 'linear-gradient(135deg, #34A853 0%, #0F9D58 100%)',
+      color: '#ffffff'
+    },
+    how_to_reg: {
+      background: 'linear-gradient(135deg, #0F9D58 0%, #4285F4 100%)',
+      color: '#ffffff'
+    },
+    assignment: {
+      background: 'linear-gradient(135deg, #4285F4 0%, #34A853 100%)',
+      color: '#ffffff'
+    },
+    settings: {
+      background: 'linear-gradient(135deg, #5C6BC0 0%, #1A237E 100%)',
+      color: '#ffffff'
+    },
+    admin_panel_settings: {
+      background: 'linear-gradient(135deg, #F44336 0%, #E91E63 100%)',
+      color: '#ffffff'
+    }
+  };
+
+  const renderNavItem = (path, iconKey, label, closeSidebar = false) => {
+    const iconStyle = googleIconPalette[iconKey] || defaultGoogleIconStyle;
+    return (
     <Nav.Link
       as={Link}
       to={path}
@@ -50,12 +120,13 @@ const MainNavbar = () => {
         }
       }}
     >
-      <span className="sidebar-icon">
-        <i className={`bi ${icon}`}></i>
+      <span className="sidebar-icon" style={iconStyle}>
+        <span className="material-icons-outlined google-icon">{iconKey}</span>
       </span>
       <span className="sidebar-text">{label}</span>
     </Nav.Link>
-  );
+    );
+  };
 
   return (
     <>
@@ -93,52 +164,52 @@ const MainNavbar = () => {
           <Nav className="flex-column sidebar-nav">
             {currentUser ? (
               <>
-                {renderNavItem('/dashboard', 'bi-speedometer2', <Translate textKey="dashboard" />, true)}
+                {renderNavItem('/dashboard', 'dashboard', <Translate textKey="dashboard" />, true)}
                 {hasPermission('canCreateReceipts') && (
-                  renderNavItem('/new-receipt', 'bi-receipt', <Translate textKey="newReceipt" />, true)
+                  renderNavItem('/new-receipt', 'point_of_sale', <Translate textKey="newReceipt" />, true)
                 )}
                 {hasPermission('canViewReceipts') && (
-                  renderNavItem('/receipts', 'bi-journal-text', <Translate textKey="receipts" />, true)
+                  renderNavItem('/receipts', 'receipt_long', <Translate textKey="receipts" />, true)
                 )}
                 {hasPermission('canViewAnalytics') && (
-                  renderNavItem('/sales-analytics', 'bi-bar-chart', <Translate textKey="salesAnalytics" fallback="Sales Analytics" />, true)
+                  renderNavItem('/sales-analytics', 'query_stats', <Translate textKey="salesAnalytics" fallback="Sales Analytics" />, true)
                 )}
                 {hasPermission('canViewStock') && (
-                  renderNavItem('/stock', 'bi-box-seam', <Translate textKey="inventory" />, true)
+                  renderNavItem('/stock', 'inventory_2', <Translate textKey="inventory" />, true)
                 )}
                 {hasPermission('canViewEmployees') && (
                   <>
-                    {renderNavItem('/employees', 'bi-people', <Translate textKey="viewEmployees" />, true)}
+                    {renderNavItem('/employees', 'groups', <Translate textKey="viewEmployees" />, true)}
                     {!isStaff && (
-                      renderNavItem('/add-employee', 'bi-person-plus', <Translate textKey="addEmployee" />, true)
+                      renderNavItem('/add-employee', 'group_add', <Translate textKey="addEmployee" />, true)
                     )}
                   </>
                 )}
                 {hasPermission('canManageExpenses') && (
                   <>
-                    {renderNavItem('/expenses', 'bi-cash-coin', <Translate textKey="viewExpenses" fallback="View Expenses" />, true)}
+                    {renderNavItem('/expenses', 'payments', <Translate textKey="viewExpenses" fallback="View Expenses" />, true)}
                     {!isStaff && (
                       <>
-                        {renderNavItem('/add-expense', 'bi-plus-circle', <Translate textKey="addExpense" fallback="Add Expense" />, true)}
-                        {renderNavItem('/expense-categories', 'bi-tags', <Translate textKey="expenseCategories" fallback="Expense Categories" />, true)}
+                        {renderNavItem('/add-expense', 'add_card', <Translate textKey="addExpense" fallback="Add Expense" />, true)}
+                        {renderNavItem('/expense-categories', 'category', <Translate textKey="expenseCategories" fallback="Expense Categories" />, true)}
                       </>
                     )}
                   </>
                 )}
                 {hasPermission('canMarkAttendance') && (
                   <>
-                    {renderNavItem('/attendance', 'bi-calendar-check', <Translate textKey="viewAttendance" />, true)}
-                    {renderNavItem('/mark-attendance', 'bi-check2-square', <Translate textKey="markAttendance" />, true)}
+                    {renderNavItem('/attendance', 'event_available', <Translate textKey="viewAttendance" />, true)}
+                    {renderNavItem('/mark-attendance', 'how_to_reg', <Translate textKey="markAttendance" />, true)}
                     {!isStaff && (
-                      renderNavItem('/attendance-report', 'bi-clipboard-data', <Translate textKey="attendanceReport" />, true)
+                      renderNavItem('/attendance-report', 'assignment', <Translate textKey="attendanceReport" />, true)
                     )}
                   </>
                 )}
                 {!isStaff && !isGuest && (
-                  renderNavItem('/settings', 'bi-gear', <Translate textKey="settings" />, true)
+                  renderNavItem('/settings', 'settings', <Translate textKey="settings" />, true)
                 )}
                 {!isStaff && !isGuest && (
-                  renderNavItem('/staff-management', 'bi-people-gear', 'Staff Management', true)
+                  renderNavItem('/staff-management', 'admin_panel_settings', 'Staff Management', true)
                 )}
                 <div className="d-flex mt-3">
                   <LanguageToggle />
@@ -178,52 +249,52 @@ const MainNavbar = () => {
         <Nav className="flex-column sidebar-nav">
           {currentUser && (
             <>
-              {renderNavItem('/dashboard', 'bi-speedometer2', <Translate textKey="dashboard" />)}
+              {renderNavItem('/dashboard', 'dashboard', <Translate textKey="dashboard" />)}
               {hasPermission('canCreateReceipts') && (
-                renderNavItem('/new-receipt', 'bi-receipt', <Translate textKey="newReceipt" />)
+                renderNavItem('/new-receipt', 'point_of_sale', <Translate textKey="newReceipt" />)
               )}
               {hasPermission('canViewReceipts') && (
-                renderNavItem('/receipts', 'bi-journal-text', <Translate textKey="receipts" />)
+                renderNavItem('/receipts', 'receipt_long', <Translate textKey="receipts" />)
               )}
               {hasPermission('canViewAnalytics') && (
-                renderNavItem('/sales-analytics', 'bi-bar-chart', <Translate textKey="salesAnalytics" fallback="Sales Analytics" />)
+                renderNavItem('/sales-analytics', 'query_stats', <Translate textKey="salesAnalytics" fallback="Sales Analytics" />)
               )}
               {hasPermission('canViewStock') && (
-                renderNavItem('/stock', 'bi-box-seam', <Translate textKey="inventory" />)
+                renderNavItem('/stock', 'inventory_2', <Translate textKey="inventory" />)
               )}
               {hasPermission('canViewEmployees') && (
                 <>
-                  {renderNavItem('/employees', 'bi-people', <Translate textKey="viewEmployees" />)}
+                  {renderNavItem('/employees', 'groups', <Translate textKey="viewEmployees" />)}
                   {!isStaff && (
-                    renderNavItem('/add-employee', 'bi-person-plus', <Translate textKey="addEmployee" />)
+                    renderNavItem('/add-employee', 'group_add', <Translate textKey="addEmployee" />)
                   )}
                 </>
               )}
               {hasPermission('canManageExpenses') && (
                 <>
-                  {renderNavItem('/expenses', 'bi-cash-coin', <Translate textKey="viewExpenses" fallback="View Expenses" />)}
+                  {renderNavItem('/expenses', 'payments', <Translate textKey="viewExpenses" fallback="View Expenses" />)}
                   {!isStaff && (
                     <>
-                      {renderNavItem('/add-expense', 'bi-plus-circle', <Translate textKey="addExpense" fallback="Add Expense" />)}
-                      {renderNavItem('/expense-categories', 'bi-tags', <Translate textKey="expenseCategories" fallback="Expense Categories" />)}
+                      {renderNavItem('/add-expense', 'add_card', <Translate textKey="addExpense" fallback="Add Expense" />)}
+                      {renderNavItem('/expense-categories', 'category', <Translate textKey="expenseCategories" fallback="Expense Categories" />)}
                     </>
                   )}
                 </>
               )}
               {hasPermission('canMarkAttendance') && (
                 <>
-                  {renderNavItem('/attendance', 'bi-calendar-check', <Translate textKey="viewAttendance" />)}
-                  {renderNavItem('/mark-attendance', 'bi-check2-square', <Translate textKey="markAttendance" />)}
+                  {renderNavItem('/attendance', 'event_available', <Translate textKey="viewAttendance" />)}
+                  {renderNavItem('/mark-attendance', 'how_to_reg', <Translate textKey="markAttendance" />)}
                   {!isStaff && (
-                    renderNavItem('/attendance-report', 'bi-clipboard-data', <Translate textKey="attendanceReport" />)
+                    renderNavItem('/attendance-report', 'assignment', <Translate textKey="attendanceReport" />)
                   )}
                 </>
               )}
               {!isStaff && !isGuest && (
-                renderNavItem('/settings', 'bi-gear', <Translate textKey="settings" />)
+                renderNavItem('/settings', 'settings', <Translate textKey="settings" />)
               )}
               {!isStaff && !isGuest && (
-                renderNavItem('/staff-management', 'bi-people-gear', 'Staff Management')
+                renderNavItem('/staff-management', 'admin_panel_settings', 'Staff Management')
               )}
             </>
           )}
