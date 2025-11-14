@@ -100,6 +100,24 @@
   color: #ffffff;
   flex-shrink: 0;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-nav .sidebar-link .sidebar-icon::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  opacity: 0.6;
+}
+
+.sidebar-nav .sidebar-link .google-icon {
+  position: relative;
+  z-index: 1;
+  font-size: 1.35rem;
+  line-height: 1;
 }
 
 .sidebar-nav .sidebar-link .sidebar-text {
@@ -202,7 +220,7 @@
   padding: 0.65rem 0.75rem !important;
 }
 
-.app-mobile-sidebar .sidebar-nav .sidebar-link i {
+.app-mobile-sidebar .sidebar-nav .sidebar-link .google-icon {
   color: rgba(255, 255, 255, 0.9) !important;
 }
 
@@ -219,7 +237,7 @@
   box-shadow: 0 8px 18px rgba(11, 31, 78, 0.25);
 }
 
-.app-mobile-sidebar .sidebar-nav .sidebar-link.active i {
+.app-mobile-sidebar .sidebar-nav .sidebar-link.active .google-icon {
   color: #ffffff !important;
 }
 
